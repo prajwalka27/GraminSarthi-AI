@@ -120,3 +120,42 @@ export function validateId(value: unknown, fieldName = "id"): string {
     }
     return value.trim();
 }
+
+export function validateEmail(value: unknown): string {
+    if (typeof value !== "string" || !value.trim()) {
+        throw new ValidationError("Email address is required");
+    }
+    const email = value.trim().toLowerCase();
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+$/;
+    if (!emailRegex.test(email) || email.length > 255) {
+        throw new ValidationError("Invalid email address format");
+    }
+    return email;
+}
+
+export function validatePassword(value: unknown): string {
+    if (typeof value !== "string" || !value) {
+        throw new ValidationError("Password is required");
+    }
+    if (value.length < 8) {
+        throw new ValidationError("Password must be at least 8 characters long");
+    }
+    if (value.length > 128) {
+        throw new ValidationError("Password cannot exceed 128 characters");
+    }
+    return value;
+}
+
+export function validateFullName(value: unknown): string {
+    if (typeof value !== "string" || !value.trim()) {
+        throw new ValidationError("Full name is required");
+    }
+    const trimmed = value.trim();
+    if (trimmed.length < 2) {
+        throw new ValidationError("Full name must be at least 2 characters long");
+    }
+    if (trimmed.length > 100) {
+        throw new ValidationError("Full name cannot exceed 100 characters");
+    }
+    return trimmed;
+}

@@ -95,12 +95,15 @@ export async function initDatabaseSchema(): Promise<void> {
                     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
                     name VARCHAR(100) NOT NULL,
                     email VARCHAR(255) UNIQUE NOT NULL,
-                    phone VARCHAR(20),
+                    phone VARCHAR(20) UNIQUE,
                     password_hash TEXT,
                     role VARCHAR(20) DEFAULT 'user',
                     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
                 );
+
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_users_email ON users(LOWER(email));
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_users_phone ON users(phone);
 
                 CREATE TABLE IF NOT EXISTS merchants (
                     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

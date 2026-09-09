@@ -1,8 +1,12 @@
 import crypto from "node:crypto";
 
 export interface SessionPayload {
-    merchantId: string;
+    userId: string;
+    email: string;
     phone: string;
+    name: string;
+    role: string;
+    merchantId?: string;
     createdAt: number;
     expiresAt: number;
 }
@@ -15,13 +19,24 @@ function getSecretKey(): string {
 }
 
 /**
- * Creates a cryptographically signed HMAC-SHA256 session token.
+ * Creates a cryptographically signed HMAC-SHA256 session token for an authenticated user.
  */
-export function createSessionToken(merchantId: string, phone: string): string {
+export function createSessionToken(user: {
+    id: string;
+    email: string;
+    phone?: string | null;
+    name: string;
+    role?: string | null;
+    merchantId?: string | null;
+}): string {
     const now = Date.now();
     const payload: SessionPayload = {
-        merchantId,
-        phone,
+        userId: user.id,
+        email: user.email,
+        phone: user.phone || "",
+        name: user.name,
+        role: user.role || "user",
+        merchantId: user.merchantId || undefined,
         createdAt: now,
         expiresAt: now + SESSION_EXPIRY_SECONDS * 1000,
     };

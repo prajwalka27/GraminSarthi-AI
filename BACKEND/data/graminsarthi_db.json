@@ -1,6 +1,26 @@
 {
   "users": [
     {
+      "id": "77fd757e-ea52-4989-892e-9eff479cc1d6",
+      "name": "Sita Devi",
+      "email": "sita.devi.1788980330740@graminsarthi.in",
+      "phone": "+919811620686",
+      "password_hash": "$2b$10$qjz/w/tfoEHxn0oJKKjrJe6wrX/LqzarOraG4.fInNqjjok/SFKkW",
+      "role": "user",
+      "created_at": "2026-09-09T18:58:51.136Z",
+      "updated_at": "2026-09-09T18:58:51.136Z"
+    },
+    {
+      "id": "f5d76a39-e65a-487f-a2e6-340cc1c967b3",
+      "name": "Ravi 2",
+      "email": "ravi@example.com",
+      "phone": "+919876543219",
+      "password_hash": "$2b$10$bJiZyIwfbbYuL60T/Z4tceJm8ByM.MwhCP84jXEmEP.v.TGEBTWia",
+      "role": "user",
+      "created_at": "2026-09-09T18:49:34.380Z",
+      "updated_at": "2026-09-09T18:49:34.380Z"
+    },
+    {
       "id": "d4c2825f-85f3-476a-ae87-17774bb5aaf5",
       "name": "Ramesh Kumar",
       "email": "ramesh.kumar@graminsarthi.in",
@@ -32,6 +52,36 @@
     }
   ],
   "merchants": [
+    {
+      "id": "df795fa9-3b49-40ba-96e6-2994916c4aee",
+      "user_id": "77fd757e-ea52-4989-892e-9eff479cc1d6",
+      "business_name": "Sita Devi's Store",
+      "owner_name": "Sita Devi",
+      "name": "Sita Devi",
+      "phone": "+919811620686",
+      "mobile": "+919811620686",
+      "email": "sita.devi.1788980330740@graminsarthi.in",
+      "address": null,
+      "category": "General Store",
+      "language": "en",
+      "created_at": "2026-09-09T18:58:51.137Z",
+      "updated_at": "2026-09-09T18:58:51.137Z"
+    },
+    {
+      "id": "8dbcb121-e5eb-44a3-b150-e2f4a1fdfa03",
+      "user_id": "f5d76a39-e65a-487f-a2e6-340cc1c967b3",
+      "business_name": "Ravi 2's Store",
+      "owner_name": "Ravi 2",
+      "name": "Ravi 2",
+      "phone": "+919876543219",
+      "mobile": "+919876543219",
+      "email": "ravi@example.com",
+      "address": null,
+      "category": "General Store",
+      "language": "en",
+      "created_at": "2026-09-09T18:49:34.382Z",
+      "updated_at": "2026-09-09T18:49:34.382Z"
+    },
     {
       "id": "93b27ea6-ab4a-40b6-871a-0136df9d419b",
       "user_id": "Gopal Dairy Point",
@@ -254,6 +304,38 @@
     }
   ],
   "businesses": [
+    {
+      "id": "2e445061-4a28-4f32-a378-4f582b9f6297",
+      "merchant_id": "df795fa9-3b49-40ba-96e6-2994916c4aee",
+      "business_name": "Sita Devi's Store",
+      "category": "General Store",
+      "business_category": "General Store",
+      "village": null,
+      "district": null,
+      "state": null,
+      "location": null,
+      "description": null,
+      "address": null,
+      "phone": null,
+      "created_at": "2026-09-09T18:58:51.139Z",
+      "updated_at": "2026-09-09T18:58:51.139Z"
+    },
+    {
+      "id": "7a49090a-48de-4a80-971a-ea9e92186afc",
+      "merchant_id": "8dbcb121-e5eb-44a3-b150-e2f4a1fdfa03",
+      "business_name": "Ravi 2's Store",
+      "category": "General Store",
+      "business_category": "General Store",
+      "village": null,
+      "district": null,
+      "state": null,
+      "location": null,
+      "description": null,
+      "address": null,
+      "phone": null,
+      "created_at": "2026-09-09T18:49:34.383Z",
+      "updated_at": "2026-09-09T18:49:34.383Z"
+    },
     {
       "id": "dc42014e-74b2-4867-ae48-501f7fd8ab45",
       "merchant_id": "93b27ea6-ab4a-40b6-871a-0136df9d419b",

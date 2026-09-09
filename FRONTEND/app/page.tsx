@@ -1,97 +1,37 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
-import { SplashScreen } from '@/components/graminsarthi/splash-screen'
-import { AuthScreen } from '@/components/graminsarthi/auth-screen'
-import { Dashboard } from '@/components/graminsarthi/dashboard'
-import { CustomerPortal } from '@/components/graminsarthi/customer-portal'
-import { makeT, type Lang } from '@/lib/graminsarthi/i18n'
-import type { ShopProfileKey } from '@/lib/graminsarthi/data'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { apiRequest } from '@/lib/api'
+import { Loader2, Sprout } from 'lucide-react'
 
-type Screen = 'SPLASH' | 'AUTH' | 'DASHBOARD' | 'CUSTOMER'
-
-export default function Page() {
-  const [screen, setScreen] = useState<Screen>('SPLASH')
-  const [lang, setLang] = useState<Lang>('en')
-  const [shop, setShop] = useState<ShopProfileKey>('kirana')
-  const [merchantId, setMerchantId] = useState<string | undefined>(undefined)
-
-  const t = useMemo(() => makeT(lang), [lang])
+export default function RootPage() {
+  const router = useRouter()
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedMerchantId = localStorage.getItem('graminsarthi.merchantId') || sessionStorage.getItem('graminsarthi.merchantId')
-      if (savedMerchantId) {
-        setMerchantId(savedMerchantId)
+    async function checkAuth() {
+      try {
+        const res = await apiRequest<{ success: boolean; user?: any }>('/api/auth/me')
+        if (res.success && res.user) {
+          router.replace('/dashboard')
+        } else {
+          router.replace('/register')
+        }
+      } catch {
+        router.replace('/register')
       }
     }
-  }, [])
 
-  if (screen === 'SPLASH') {
-    return (
-      <SplashScreen
-        lang={lang}
-        onLangChange={setLang}
-        t={t}
-        onLaunch={() => setScreen('AUTH')}
-        onCustomer={() => setScreen('CUSTOMER')}
-      />
-    )
-  }
-
-  if (screen === 'CUSTOMER') {
-    return (
-      <CustomerPortal
-        lang={lang}
-        onLangChange={setLang}
-        onSwitchToMerchant={() => setScreen('AUTH')}
-        onBack={() => setScreen('SPLASH')}
-      />
-    )
-  }
-
-  if (screen === 'AUTH') {
-    return (
-      <AuthScreen
-        lang={lang}
-        onLangChange={setLang}
-        t={t}
-        onBack={() => setScreen('SPLASH')}
-        onSwitchToCustomer={() => setScreen('CUSTOMER')}
-        onEnter={(selectedShop, mId) => {
-          setShop(selectedShop)
-          setMerchantId(mId)
-          if (typeof window !== 'undefined') {
-            localStorage.setItem('graminsarthi.merchantId', mId)
-            sessionStorage.setItem('graminsarthi.merchantId', mId)
-          }
-          setScreen('DASHBOARD')
-        }}
-      />
-    )
-  }
+    checkAuth()
+  }, [router])
 
   return (
-    <Dashboard
-      key={`${shop}-${merchantId}`}
-      lang={lang}
-      onLangChange={setLang}
-      t={t}
-      initialShop={shop}
-      merchantId={merchantId}
-      onSwitchToCustomer={() => setScreen('CUSTOMER')}
-      onLogout={() => {
-        setMerchantId(undefined)
-        if (typeof window !== 'undefined') {
-          localStorage.removeItem('graminsarthi.merchantId')
-          localStorage.removeItem('graminsarthi.businessId')
-          localStorage.removeItem('graminsarthi.mobile')
-          sessionStorage.removeItem('graminsarthi.merchantId')
-          sessionStorage.removeItem('graminsarthi.businessId')
-          sessionStorage.removeItem('graminsarthi.mobile')
-        }
-        setScreen('AUTH')
-      }}
-    />
+    <div className="flex min-h-screen flex-col items-center justify-center bg-background text-foreground">
+      <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-tr from-emerald-600 to-sky-500 shadow-xl shadow-emerald-950/30">
+        <Sprout className="h-6 w-6 text-white" />
+      </div>
+      <Loader2 className="mt-4 h-6 w-6 animate-spin text-emerald-400" />
+      <p className="mt-2 text-xs text-muted-foreground">Loading GraminSarthi-AI...</p>
+    </div>
   )
 }

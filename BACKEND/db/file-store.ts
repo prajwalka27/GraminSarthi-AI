@@ -508,14 +508,36 @@ class FileDatabase {
 
         if (upper.startsWith("INSERT INTO USERS")) {
             // [name, email, phone, passwordHash, role]
+            const name = params[0];
+            const email = (params[1] || "").toLowerCase().trim();
+            const phone = params[2] ? String(params[2]).trim() : null;
+            const passwordHash = params[3];
+            const role = params[4] || "user";
+
+            // Enforce email uniqueness
+            if (this.data.users.some(u => (u.email || "").toLowerCase() === email)) {
+                const err: any = new Error("Email already registered");
+                err.code = "23505";
+                err.constraint = "users_email_key";
+                throw err;
+            }
+
+            // Enforce phone uniqueness
+            if (phone && this.data.users.some(u => u.phone === phone)) {
+                const err: any = new Error("Phone number already registered");
+                err.code = "23505";
+                err.constraint = "users_phone_key";
+                throw err;
+            }
+
             const now = new Date().toISOString();
             const user = {
                 id: randomUUID(),
-                name: params[0],
-                email: params[1],
-                phone: params[2] || null,
-                password_hash: params[3],
-                role: params[4] || "user",
+                name,
+                email,
+                phone,
+                password_hash: passwordHash,
+                role,
                 created_at: now,
                 updated_at: now,
             };
@@ -524,22 +546,24 @@ class FileDatabase {
             return { rows: [user], rowCount: 1 };
         }
 
-        if (upper.startsWith("SELECT * FROM USERS") && upper.includes("WHERE ID = $1")) {
-            const u = this.data.users.find(item => item.id === params[0]);
-            return { rows: u ? [u] : [], rowCount: u ? 1 : 0 };
-        }
+        if (upper.startsWith("SELECT") && upper.includes("FROM USERS")) {
+            if (upper.includes("WHERE ID = $1") || upper.includes("ID = $1")) {
+                const u = this.data.users.find(item => item.id === params[0]);
+                return { rows: u ? [u] : [], rowCount: u ? 1 : 0 };
+            }
 
-        if (upper.startsWith("SELECT * FROM USERS") && upper.includes("WHERE EMAIL = $1")) {
-            const u = this.data.users.find(item => item.email === params[0]);
-            return { rows: u ? [u] : [], rowCount: u ? 1 : 0 };
-        }
+            if (upper.includes("EMAIL")) {
+                const searchEmail = String(params[0] || "").toLowerCase().trim();
+                const u = this.data.users.find(item => (item.email || "").toLowerCase() === searchEmail);
+                return { rows: u ? [u] : [], rowCount: u ? 1 : 0 };
+            }
 
-        if (upper.startsWith("SELECT * FROM USERS") && upper.includes("WHERE PHONE = $1")) {
-            const u = this.data.users.find(item => item.phone === params[0]);
-            return { rows: u ? [u] : [], rowCount: u ? 1 : 0 };
-        }
+            if (upper.includes("PHONE")) {
+                const searchPhone = String(params[0] || "").trim();
+                const u = this.data.users.find(item => item.phone === searchPhone);
+                return { rows: u ? [u] : [], rowCount: u ? 1 : 0 };
+            }
 
-        if (upper.startsWith("SELECT * FROM USERS")) {
             return { rows: [...this.data.users], rowCount: this.data.users.length };
         }
 

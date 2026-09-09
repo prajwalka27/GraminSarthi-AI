@@ -9,7 +9,7 @@ import { getBusinessDashboard, getDashboardSummary } from "./routes/dashboard.js
 import { getDailyReport, getMonthlyReport, getSummaryReport } from "./routes/reports.js";
 import { analyzeBusinessAI } from "./routes/ai.js";
 import { createProblem, deleteProblem, getProblemById, getProblems, updateProblem } from "./routes/problems.js";
-import { handleSendOtp, handleVerifyOtp, handleGetSession, handleLogout } from "./routes/auth.js";
+import { handleRegister, handleLogin, handleGetSession, handleLogout } from "./routes/auth.js";
 import { AppError } from "./utils/validation.js";
 import { sendSuccess, sendList, sendError, sendJson, setCorsHeaders } from "./utils/response.js";
 
@@ -66,8 +66,8 @@ const server = http.createServer(async (req, res) => {
                 endpoints: [
                     "GET /api/health",
                     "GET /api/health/db",
-                    "POST /api/auth/send-otp",
-                    "POST /api/auth/verify-otp",
+                    "POST /api/auth/register",
+                    "POST /api/auth/login",
                     "GET /api/auth/me",
                     "POST /api/auth/logout",
                     "GET /api/merchant",
@@ -110,35 +110,27 @@ const server = http.createServer(async (req, res) => {
         if (parts[0] === "api" && parts[1] === "auth") {
             const authAction = parts[2];
 
-            // POST /api/auth/send-otp
-            if (authAction === "send-otp") {
+            // POST /api/auth/register
+            if (authAction === "register") {
                 if (req.method !== "POST") {
-                    return sendError(res, "Method Not Allowed. Send POST /api/auth/send-otp with JSON: {\"phone\": \"9876543210\"}", 405);
+                    return sendError(res, "Method Not Allowed. Use POST", 405);
                 }
                 const input = await readJSON(req);
-                const result = await handleSendOtp(input);
-                sendJson(res, 200, {
-                    success: true,
-                    message: "OTP sent successfully",
-                    data: result.data,
-                });
-                return;
+                const result = await handleRegister(input);
+                return sendJson(res, result.statusCode, result);
             }
 
-            // POST /api/auth/verify-otp
-            if (authAction === "verify-otp") {
+            // POST /api/auth/login
+            if (authAction === "login") {
                 if (req.method !== "POST") {
-                    return sendError(res, "Method Not Allowed. Send POST /api/auth/verify-otp with JSON: {\"phone\": \"9876543210\", \"otp\": \"123456\"}", 405);
+                    return sendError(res, "Method Not Allowed. Use POST", 405);
                 }
                 const input = await readJSON(req);
-                const result = await handleVerifyOtp(input);
-                res.setHeader("Set-Cookie", result.cookieHeader);
-                sendJson(res, 200, {
-                    success: true,
-                    message: "Phone number verified successfully",
-                    data: result.data,
-                });
-                return;
+                const result = await handleLogin(input);
+                if (result.cookieHeader) {
+                    res.setHeader("Set-Cookie", result.cookieHeader);
+                }
+                return sendJson(res, result.statusCode, result);
             }
 
             // GET /api/auth/session or GET /api/auth/me
@@ -147,11 +139,7 @@ const server = http.createServer(async (req, res) => {
                     return sendError(res, "Method Not Allowed. Use GET", 405);
                 }
                 const result = await handleGetSession(req.headers.cookie, req.headers.authorization);
-                sendJson(res, 200, {
-                    success: true,
-                    data: result,
-                });
-                return;
+                return sendJson(res, result.statusCode, result);
             }
 
             // POST /api/auth/logout
@@ -161,11 +149,7 @@ const server = http.createServer(async (req, res) => {
                 }
                 const result = handleLogout();
                 res.setHeader("Set-Cookie", result.clearCookieHeader);
-                sendJson(res, 200, {
-                    success: true,
-                    message: "Logged out successfully",
-                });
-                return;
+                return sendJson(res, result.statusCode, result);
             }
 
             // GET /api/auth catalog
@@ -173,10 +157,10 @@ const server = http.createServer(async (req, res) => {
                 success: true,
                 message: "GraminSarthi Authentication API",
                 endpoints: {
-                    "POST /api/auth/send-otp": "Send real SMS OTP to phone",
-                    "POST /api/auth/verify-otp": "Verify received SMS OTP and login/register",
+                    "POST /api/auth/register": "Register new account with email and password",
+                    "POST /api/auth/login": "Authenticate user with email and password",
                     "GET /api/auth/me": "Get current session profile",
-                    "POST /api/auth/logout": "Clear session cookie",
+                    "POST /api/auth/logout": "Clear session cookie and invalidate session",
                 },
             });
             return;
