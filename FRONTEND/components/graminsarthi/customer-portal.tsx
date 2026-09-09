@@ -53,13 +53,12 @@ export function CustomerPortal({
   lang,
   onLangChange,
   onSwitchToMerchant,
-  onSwitchToHost,
   onBack,
 }: {
   lang: Lang
   onLangChange: (l: Lang) => void
   onSwitchToMerchant: () => void
-  onSwitchToHost: () => void
+  onSwitchToHost?: () => void
   onBack: () => void
 }) {
   const {
@@ -310,15 +309,6 @@ export function CustomerPortal({
             {/* Language Selector */}
             <LanguageSelect lang={lang} onChange={onLangChange} compact />
 
-            {/* Switch to Host Portal (Super Admin) */}
-            <button
-              onClick={onSwitchToHost}
-              className="hidden rounded-xl border border-purple-500/40 bg-purple-500/10 px-3 py-2 text-xs font-semibold text-purple-300 transition hover:bg-purple-500/20 md:inline-flex"
-              title="Host / Super Admin View - Access Everything"
-            >
-              👑 Host Portal
-            </button>
-
             {/* Switch to Merchant Mode */}
             <button
               onClick={onSwitchToMerchant}
@@ -401,11 +391,10 @@ export function CustomerPortal({
               <button
                 key={cat.key}
                 onClick={() => setSelectedCategory(cat.key as ShopCategory)}
-                className={`inline-flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-semibold transition ${
-                  isActive
-                    ? 'border-emerald-500 bg-emerald-500/15 text-emerald-300 shadow-sm'
-                    : 'border-border bg-card text-muted-foreground hover:border-border/80 hover:text-foreground'
-                }`}
+                className={`inline-flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2.5 text-xs font-semibold transition ${isActive
+                  ? 'border-emerald-500 bg-emerald-500/15 text-emerald-300 shadow-sm'
+                  : 'border-border bg-card text-muted-foreground hover:border-border/80 hover:text-foreground'
+                  }`}
               >
                 <Icon className="h-4 w-4" />
                 <span>{cat.label}</span>
@@ -717,11 +706,10 @@ export function CustomerPortal({
                       selectCustomer(c)
                       setShowProfileModal(false)
                     }}
-                    className={`flex w-full items-center justify-between rounded-xl border p-2.5 text-left text-xs transition ${
-                      currentCustomer?.id === c.id
-                        ? 'border-emerald-500 bg-emerald-500/15 text-emerald-300 font-semibold'
-                        : 'border-border bg-secondary text-foreground hover:border-emerald-500/30'
-                    }`}
+                    className={`flex w-full items-center justify-between rounded-xl border p-2.5 text-left text-xs transition ${currentCustomer?.id === c.id
+                      ? 'border-emerald-500 bg-emerald-500/15 text-emerald-300 font-semibold'
+                      : 'border-border bg-secondary text-foreground hover:border-emerald-500/30'
+                      }`}
                   >
                     <div>
                       <p className="font-semibold">{c.name}</p>
@@ -843,12 +831,11 @@ export function CustomerPortal({
                   <div key={o.id} className="rounded-2xl border border-border bg-secondary p-4">
                     <div className="flex items-center justify-between text-xs">
                       <span className="font-mono font-bold text-foreground">#{o.id}</span>
-                      <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
-                        o.status === 'delivered' ? 'bg-emerald-500/20 text-emerald-300' :
+                      <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${o.status === 'delivered' ? 'bg-emerald-500/20 text-emerald-300' :
                         o.status === 'confirmed' ? 'bg-sky-500/20 text-sky-300' :
-                        o.status === 'out_for_delivery' ? 'bg-purple-500/20 text-purple-300' :
-                        'bg-amber-500/20 text-amber-300'
-                      }`}>
+                          o.status === 'out_for_delivery' ? 'bg-purple-500/20 text-purple-300' :
+                            'bg-amber-500/20 text-amber-300'
+                        }`}>
                         {o.status.replace(/_/g, ' ')}
                       </span>
                     </div>

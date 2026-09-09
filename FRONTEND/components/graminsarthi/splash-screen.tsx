@@ -77,36 +77,25 @@ export function SplashScreen({
           ))}
         </ul>
 
-        <div className="mt-10 grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="mt-10 flex w-full max-w-md flex-col gap-3 sm:flex-row">
           {onCustomer && (
             <button
               onClick={onCustomer}
-              className="group flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-center transition hover:bg-emerald-500/20 active:scale-[0.99]"
+              className="group flex flex-1 flex-col items-center justify-center gap-1 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-center transition hover:bg-emerald-500/20 active:scale-[0.99]"
             >
               <span className="text-2xl">🛒</span>
-              <span className="text-sm font-bold text-emerald-300">Customer Market</span>
-              <span className="text-[11px] text-muted-foreground">Self-Register & Shop</span>
-            </button>
-          )}
-
-          {onHost && (
-            <button
-              onClick={onHost}
-              className="group flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-purple-500/40 bg-purple-500/10 p-4 text-center transition hover:bg-purple-500/20 active:scale-[0.99]"
-            >
-              <span className="text-2xl">👑</span>
-              <span className="text-sm font-bold text-purple-300">Host / Admin</span>
-              <span className="text-[11px] text-muted-foreground">Access Everything</span>
+              <span className="text-base font-bold text-emerald-300">Village Market</span>
+              <span className="text-xs text-muted-foreground">Customer Self-Register & Shop</span>
             </button>
           )}
 
           <button
             onClick={onLaunch}
-            className="group flex flex-col items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-br from-emerald-600 to-sky-600 p-4 text-center text-white shadow-lg transition hover:from-emerald-500 hover:to-sky-500 active:scale-[0.99]"
+            className="group flex flex-1 flex-col items-center justify-center gap-1 rounded-2xl bg-gradient-to-br from-emerald-600 to-sky-600 p-4 text-center text-white shadow-lg transition hover:from-emerald-500 hover:to-sky-500 active:scale-[0.99]"
           >
             <span className="text-2xl">🏪</span>
-            <span className="text-sm font-bold">Merchant Portal</span>
-            <span className="text-[11px] text-emerald-100/80">Ledger & AI Feasibility</span>
+            <span className="text-base font-bold">Merchant Portal</span>
+            <span className="text-xs text-emerald-100/80">Ledger, Issues & AI Feasibility</span>
           </button>
         </div>
       </div>

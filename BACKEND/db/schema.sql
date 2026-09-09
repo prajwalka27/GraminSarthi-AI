@@ -67,3 +67,21 @@ CREATE INDEX IF NOT EXISTS idx_businesses_merchant_id ON businesses(merchant_id)
 CREATE INDEX IF NOT EXISTS idx_ledger_business_merchant ON ledger_entries(business_id, merchant_id);
 CREATE INDEX IF NOT EXISTS idx_ledger_entry_date ON ledger_entries(entry_date);
 
+-- PROBLEMS / ISSUES TABLE
+CREATE TABLE IF NOT EXISTS problems (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    merchant_id UUID REFERENCES merchants(id) ON DELETE CASCADE,
+    business_id UUID REFERENCES businesses(id) ON DELETE SET NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    category VARCHAR(100),
+    location VARCHAR(255),
+    priority VARCHAR(50) DEFAULT 'medium',
+    status VARCHAR(50) DEFAULT 'open',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_problems_merchant_id ON problems(merchant_id);
+CREATE INDEX IF NOT EXISTS idx_problems_status ON problems(status);
+

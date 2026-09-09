@@ -8,6 +8,7 @@ import { calculateFinancials, createLedgerEntry, deleteLedgerEntry, getLedgerEnt
 import { getBusinessDashboard, getDashboardSummary } from "./routes/dashboard.js";
 import { getDailyReport, getMonthlyReport, getSummaryReport } from "./routes/reports.js";
 import { analyzeBusinessAI } from "./routes/ai.js";
+import { createProblem, deleteProblem, getProblemById, getProblems, updateProblem } from "./routes/problems.js";
 import { handleSendOtp, handleVerifyOtp, handleGetSession, handleLogout } from "./routes/auth.js";
 import { AppError } from "./utils/validation.js";
 import { sendSuccess, sendList, sendError, sendJson, setCorsHeaders } from "./utils/response.js";
@@ -78,6 +79,11 @@ const server = http.createServer(async (req, res) => {
                     "POST /api/ledger/calculate",
                     "GET /api/dashboard",
                     "POST /api/ai/analyze",
+                    "GET /api/problems",
+                    "POST /api/problems",
+                    "GET /api/problems/:id",
+                    "PUT /api/problems/:id",
+                    "DELETE /api/problems/:id",
                 ],
             });
             return;
@@ -506,6 +512,59 @@ const server = http.createServer(async (req, res) => {
 
                     const analysis = await analyzeBusinessAI(businessId, {});
                     sendSuccess(res, analysis);
+                    return;
+                }
+            }
+        }
+
+        // ==========================================
+        // 9. PROBLEMS / ISSUES API
+        // ==========================================
+        if (parts[0] === "api" && parts[1] === "problems") {
+            // GET /api/problems (list with optional filters)
+            if (req.method === "GET" && parts.length === 2) {
+                const merchantId = url.searchParams.get("merchantId") || undefined;
+                const businessId = url.searchParams.get("businessId") || undefined;
+                const status = url.searchParams.get("status") || undefined;
+                const priority = url.searchParams.get("priority") || undefined;
+                const category = url.searchParams.get("category") || undefined;
+
+                const problems = await getProblems({ merchantId, businessId, status, priority, category });
+                sendList(res, problems);
+                return;
+            }
+
+            // POST /api/problems (create problem)
+            if (req.method === "POST" && parts.length === 2) {
+                const input = await readJSON(req);
+                const problem = await createProblem(input as any);
+                sendSuccess(res, problem, 201);
+                return;
+            }
+
+            // /api/problems/:id
+            if (parts.length === 3) {
+                const problemId = parts[2];
+
+                if (req.method === "GET") {
+                    const problem = await getProblemById(problemId);
+                    if (!problem) return sendError(res, "Problem not found", 404);
+                    sendSuccess(res, problem);
+                    return;
+                }
+
+                if (req.method === "PUT") {
+                    const input = await readJSON(req);
+                    const problem = await updateProblem(problemId, input as any);
+                    if (!problem) return sendError(res, "Problem not found", 404);
+                    sendSuccess(res, problem);
+                    return;
+                }
+
+                if (req.method === "DELETE") {
+                    const problem = await deleteProblem(problemId);
+                    if (!problem) return sendError(res, "Problem not found", 404);
+                    sendSuccess(res, { message: "Problem deleted successfully", problem });
                     return;
                 }
             }

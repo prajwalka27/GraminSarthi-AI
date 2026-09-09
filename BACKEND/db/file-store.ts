@@ -12,6 +12,7 @@ export interface LocalDbData {
     merchants: any[];
     businesses: any[];
     ledger_entries: any[];
+    problems: any[];
 }
 
 function getDefaultSeed(): LocalDbData {
@@ -98,6 +99,34 @@ function getDefaultSeed(): LocalDbData {
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString()
             }
+        ],
+        problems: [
+            {
+                id: "prob-demo-001",
+                merchant_id: merchantId,
+                business_id: businessId,
+                title: "Cold storage compressor failure for evening dairy batch",
+                description: "Deep freezer temperature fluctuating above 12°C, risking milk spoil in 4 hours.",
+                category: "Equipment",
+                location: "Dairy section, booth 2",
+                priority: "high",
+                status: "open",
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            },
+            {
+                id: "prob-demo-002",
+                merchant_id: merchantId,
+                business_id: businessId,
+                title: "Wholesale wheat flour shipment delayed on Mandi Highway",
+                description: "Supplier truck stuck due to culvert repair; need alternative local miller dispatch.",
+                category: "Supply Chain",
+                location: "Mandi Road",
+                priority: "medium",
+                status: "in_progress",
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            }
         ]
     };
 }
@@ -147,6 +176,7 @@ class FileDatabase {
                     merchants: Array.isArray(parsed.merchants) ? parsed.merchants : [],
                     businesses: Array.isArray(parsed.businesses) ? parsed.businesses : [],
                     ledger_entries: Array.isArray(parsed.ledger_entries) ? parsed.ledger_entries : [],
+                    problems: Array.isArray(parsed.problems) ? parsed.problems : [],
                 };
             }
         } catch (err) {
@@ -197,6 +227,11 @@ class FileDatabase {
         // 5. USERS
         if (upper.includes("FROM USERS") || upper.includes("INTO USERS") || upper.includes("UPDATE USERS") || upper.includes("DELETE FROM USERS")) {
             return this.handleUsers(sql, params);
+        }
+
+        // 6. PROBLEMS
+        if (upper.includes("FROM PROBLEMS") || upper.includes("INTO PROBLEMS") || upper.includes("UPDATE PROBLEMS") || upper.includes("DELETE FROM PROBLEMS")) {
+            return this.handleProblems(sql, params);
         }
 
         return { rows: [], rowCount: 0 };
@@ -404,6 +439,14 @@ class FileDatabase {
             };
         }
 
+        if (upper.includes("COUNT(*)") && upper.includes("FROM LEDGER_ENTRIES")) {
+            let filtered = this.data.ledger_entries;
+            if (params.length > 0) {
+                filtered = filtered.filter(e => e.business_id === params[0] || e.merchant_id === params[0]);
+            }
+            return { rows: [{ count: String(filtered.length) }], rowCount: 1 };
+        }
+
         if (upper.startsWith("SELECT") && upper.includes("FROM LEDGER_ENTRIES")) {
             let list = [...this.data.ledger_entries];
             if (upper.includes("WHERE ID = $1 AND MERCHANT_ID = $2")) {
@@ -514,6 +557,78 @@ class FileDatabase {
             const idx = this.data.users.findIndex(item => item.id === params[0]);
             if (idx === -1) return { rows: [], rowCount: 0 };
             const deleted = this.data.users.splice(idx, 1)[0];
+            this.save();
+            return { rows: [deleted], rowCount: 1 };
+        }
+
+        return { rows: [], rowCount: 0 };
+    }
+
+    private handleProblems(sql: string, params: any[]) {
+        if (!this.data.problems) this.data.problems = [];
+        const upper = sql.toUpperCase();
+
+        if (upper.startsWith("INSERT INTO PROBLEMS")) {
+            const now = new Date().toISOString();
+            const prob = {
+                id: randomUUID(),
+                merchant_id: params[0] || null,
+                business_id: params[1] || null,
+                title: params[2],
+                description: params[3] || null,
+                category: params[4] || "General",
+                location: params[5] || null,
+                priority: params[6] || "medium",
+                status: params[7] || "open",
+                created_at: now,
+                updated_at: now,
+            };
+            this.data.problems.unshift(prob);
+            this.save();
+            return { rows: [prob], rowCount: 1 };
+        }
+
+        if (upper.includes("COUNT(*)") && upper.includes("FROM PROBLEMS")) {
+            let filtered = this.data.problems;
+            if (params.length > 0) {
+                filtered = filtered.filter(p => p.merchant_id === params[0] || p.business_id === params[0]);
+            }
+            return { rows: [{ count: String(filtered.length) }], rowCount: 1 };
+        }
+
+        if (upper.startsWith("SELECT * FROM PROBLEMS") && upper.includes("WHERE ID = $1")) {
+            const p = this.data.problems.find(item => item.id === params[0]);
+            return { rows: p ? [p] : [], rowCount: p ? 1 : 0 };
+        }
+
+        if (upper.startsWith("SELECT * FROM PROBLEMS")) {
+            let list = [...this.data.problems];
+            if (upper.includes("MERCHANT_ID = $")) {
+                const mId = params.find(param => typeof param === "string" && (param.startsWith("m-") || param.length > 20));
+                if (mId) list = list.filter(item => item.merchant_id === mId);
+            }
+            if (upper.includes("LOWER(STATUS) = $")) {
+                const statusParam = params.find(param => ["open", "in_progress", "resolved", "closed"].includes(String(param).toLowerCase()));
+                if (statusParam) list = list.filter(item => item.status?.toLowerCase() === statusParam.toLowerCase());
+            }
+            return { rows: list, rowCount: list.length };
+        }
+
+        if (upper.startsWith("UPDATE PROBLEMS")) {
+            const id = params[params.length - 1];
+            const p = this.data.problems.find(item => item.id === id);
+            if (!p) return { rows: [], rowCount: 0 };
+            applySqlSet(p, sql, params);
+            p.updated_at = new Date().toISOString();
+            this.save();
+            return { rows: [p], rowCount: 1 };
+        }
+
+        if (upper.startsWith("DELETE FROM PROBLEMS")) {
+            const id = params[0];
+            const idx = this.data.problems.findIndex(item => item.id === id);
+            if (idx === -1) return { rows: [], rowCount: 0 };
+            const deleted = this.data.problems.splice(idx, 1)[0];
             this.save();
             return { rows: [deleted], rowCount: 1 };
         }

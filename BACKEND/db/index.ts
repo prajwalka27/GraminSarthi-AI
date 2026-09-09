@@ -174,8 +174,25 @@ export async function initDatabaseSchema(): Promise<void> {
                 ALTER TABLE ledger_entries ADD COLUMN IF NOT EXISTS description TEXT;
                 ALTER TABLE ledger_entries ADD COLUMN IF NOT EXISTS amount NUMERIC(14,2) DEFAULT 0;
                 ALTER TABLE ledger_entries ADD COLUMN IF NOT EXISTS entry_date DATE DEFAULT CURRENT_DATE;
+
+                CREATE TABLE IF NOT EXISTS problems (
+                    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+                    merchant_id UUID,
+                    business_id UUID,
+                    title VARCHAR(255) NOT NULL,
+                    description TEXT,
+                    category VARCHAR(100),
+                    location VARCHAR(255),
+                    priority VARCHAR(50) DEFAULT 'medium',
+                    status VARCHAR(50) DEFAULT 'open',
+                    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+                );
+
+                CREATE INDEX IF NOT EXISTS idx_problems_merchant_id ON problems(merchant_id);
+                CREATE INDEX IF NOT EXISTS idx_problems_status ON problems(status);
             `);
-            console.log("[DB] PostgreSQL schema checked and harmonized.");
+            console.log("[DB] PostgreSQL schema checked and harmonized (including problems table).");
         } finally {
             client.release();
         }

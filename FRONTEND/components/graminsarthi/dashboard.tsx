@@ -11,12 +11,13 @@ import { WhatIfSimulator } from './whatif-simulator'
 import { SchemeMatcher } from './scheme-matcher'
 import { ActionSteps } from './action-steps'
 import { FinanceCalculator } from './finance-calculator'
+import { ProblemsCard } from './problems-card'
 import type { Lang, TranslationKey } from '@/lib/graminsarthi/i18n'
 import { computeKpis, formatINR, getShopProfile, getAllShopProfiles, getRemediation, TRADE_CATEGORIES, type ShopProfileKey } from '@/lib/graminsarthi/data'
 import { useGraminsarthiStore } from '@/hooks/use-graminsarthi-store'
 import { Field, Select, TextInput } from './primitives'
 
-type DashboardTab = 'LEDGER' | 'FEASIBILITY' | 'FINANCE_CALCULATOR'
+type DashboardTab = 'LEDGER' | 'FEASIBILITY' | 'FINANCE_CALCULATOR' | 'PROBLEMS'
 
 export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLogout, onSwitchToCustomer, onSwitchToHost }: {
   lang: Lang
@@ -169,16 +170,6 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
               </button>
             )}
 
-            {onSwitchToHost && (
-              <button
-                onClick={onSwitchToHost}
-                className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-purple-500/30 bg-purple-500/10 px-3 text-xs font-semibold text-purple-300 transition hover:bg-purple-500/20"
-                title="Open Host & Village Admin Portal"
-              >
-                <span>👑 Host Portal</span>
-              </button>
-            )}
-
             <LanguageSelect lang={lang} onChange={onLangChange} compact />
 
             <button
@@ -229,6 +220,15 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
                 }`}
             >
               {t('tabFinanceCalculator')}
+            </button>
+            <button
+              onClick={() => setActiveTab('PROBLEMS')}
+              className={`min-h-12 border-b-2 px-1 text-sm font-semibold transition ${activeTab === 'PROBLEMS'
+                ? 'border-amber-500 text-amber-500'
+                : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+            >
+              ⚠️ {lang === 'hi' ? 'समस्याएं और मुद्दे' : 'Issues & Problems'}
             </button>
           </div>
         </div>
@@ -292,6 +292,12 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
         {activeTab === 'FINANCE_CALCULATOR' && (
           <div className="mx-auto max-w-3xl">
             <FinanceCalculator t={t} />
+          </div>
+        )}
+
+        {activeTab === 'PROBLEMS' && (
+          <div className="mx-auto max-w-5xl">
+            <ProblemsCard lang={lang} merchantId={merchantId} businessId={businessId || undefined} />
           </div>
         )}
       </main>

@@ -8,7 +8,8 @@
         "typecheck": "tsc --noEmit",
         "typecheck:legacy": "tsc --noEmit --target ES2022 --module NodeNext --moduleResolution NodeNext --skipLibCheck server.ts",
         "db:init": "tsx db/init.ts",
-        "db:seed": "tsx db/seed.ts"
+        "db:seed": "tsx db/seed.ts",
+        "seed": "tsx db/seed.ts"
     },
     "dependencies": {
         "bcryptjs": "^3.0.3",

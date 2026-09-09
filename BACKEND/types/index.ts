@@ -139,3 +139,33 @@ export function mapLedgerEntry(row: any): LedgerEntry {
     };
 }
 
+export type Problem = {
+    id: string;
+    merchantId?: string | null;
+    businessId?: string | null;
+    title: string;
+    description?: string;
+    category?: string;
+    location?: string;
+    priority: "low" | "medium" | "high" | "urgent";
+    status: "open" | "in_progress" | "resolved" | "closed";
+    createdAt: string;
+    updatedAt: string;
+};
+
+export function mapProblem(row: any): Problem {
+    return {
+        id: row.id,
+        merchantId: row.merchant_id || null,
+        businessId: row.business_id || null,
+        title: row.title || "Untitled Issue",
+        description: row.description || "",
+        category: row.category || "General",
+        location: row.location || "",
+        priority: (row.priority || "medium").toLowerCase() as Problem["priority"],
+        status: (row.status || "open").toLowerCase() as Problem["status"],
+        createdAt: row.created_at ? new Date(row.created_at).toISOString() : new Date().toISOString(),
+        updatedAt: row.updated_at ? new Date(row.updated_at).toISOString() : new Date().toISOString(),
+    };
+}
+

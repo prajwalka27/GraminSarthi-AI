@@ -1,6 +1,26 @@
 {
   "users": [
     {
+      "id": "d4c2825f-85f3-476a-ae87-17774bb5aaf5",
+      "name": "Ramesh Kumar",
+      "email": "ramesh.kumar@graminsarthi.in",
+      "phone": "+919876543210",
+      "password_hash": "$2b$10$1wr99NoEDGPu/Xm0p.TVmeF1/vZOy5JEvnHowi9uffrGjWlZIQ.7u",
+      "role": "merchant",
+      "created_at": "2026-09-09T18:31:03.478Z",
+      "updated_at": "2026-09-09T18:31:03.478Z"
+    },
+    {
+      "id": "89a67a42-40cb-4731-84c0-ebe758117046",
+      "name": "Ramesh Kumar",
+      "email": "ramesh.kumar@graminsarthi.in",
+      "phone": "+919876543210",
+      "password_hash": "$2b$10$xNP3hf0N5/VcI0Z/uECcdepi7Z1q/SkDluh6d7o0s9H9wDGjfmH.6",
+      "role": "merchant",
+      "created_at": "2026-09-09T18:30:07.555Z",
+      "updated_at": "2026-09-09T18:30:07.555Z"
+    },
+    {
       "id": "u-demo-001",
       "name": "Ramesh Kumar",
       "email": "ramesh.kumar@graminsarthi.in",
@@ -12,6 +32,66 @@
     }
   ],
   "merchants": [
+    {
+      "id": "93b27ea6-ab4a-40b6-871a-0136df9d419b",
+      "user_id": "Gopal Dairy Point",
+      "business_name": "Gopal Yadav",
+      "owner_name": "Gopal Yadav",
+      "name": "Gopal Yadav",
+      "phone": "+919876543211",
+      "mobile": "+919876543211",
+      "email": "+919876543211",
+      "address": "gopal.dairy@graminsarthi.in",
+      "category": "West Rampur, Near Milk Chilling Booth",
+      "language": "Dairy & Milk Point",
+      "created_at": "2026-09-09T18:31:03.495Z",
+      "updated_at": "2026-09-09T18:31:03.495Z"
+    },
+    {
+      "id": "f907234a-085e-45a2-812c-4bf23ad7c701",
+      "user_id": "d4c2825f-85f3-476a-ae87-17774bb5aaf5",
+      "business_name": "Sri Lakshmi Provisions",
+      "owner_name": "Ramesh Kumar",
+      "name": "Ramesh Kumar",
+      "phone": "+919876543210",
+      "mobile": "+919876543210",
+      "email": "ramesh.kumar@graminsarthi.in",
+      "address": "Main Road, Rampur Village",
+      "category": "Grocery / Kirana",
+      "language": "en",
+      "created_at": "2026-09-09T18:31:03.490Z",
+      "updated_at": "2026-09-09T18:31:03.490Z"
+    },
+    {
+      "id": "590fa39b-0238-4ab4-bf82-42b687bdaf33",
+      "user_id": "Gopal Dairy Point",
+      "business_name": "Gopal Yadav",
+      "owner_name": "Gopal Yadav",
+      "name": "Gopal Yadav",
+      "phone": "+919876543211",
+      "mobile": "+919876543211",
+      "email": "+919876543211",
+      "address": "gopal.dairy@graminsarthi.in",
+      "category": "West Rampur, Near Milk Chilling Booth",
+      "language": "Dairy & Milk Point",
+      "created_at": "2026-09-09T18:30:07.564Z",
+      "updated_at": "2026-09-09T18:30:07.564Z"
+    },
+    {
+      "id": "89c4695c-9458-4a56-a75d-bd4b531ca9aa",
+      "user_id": "89a67a42-40cb-4731-84c0-ebe758117046",
+      "business_name": "Sri Lakshmi Provisions",
+      "owner_name": "Ramesh Kumar",
+      "name": "Ramesh Kumar",
+      "phone": "+919876543210",
+      "mobile": "+919876543210",
+      "email": "ramesh.kumar@graminsarthi.in",
+      "address": "Main Road, Rampur Village",
+      "category": "Grocery / Kirana",
+      "language": "en",
+      "created_at": "2026-09-09T18:30:07.558Z",
+      "updated_at": "2026-09-09T18:30:07.558Z"
+    },
     {
       "id": "747d2549-c775-4f0e-8568-b79cbc4d6b27",
       "user_id": null,
@@ -174,6 +254,70 @@
     }
   ],
   "businesses": [
+    {
+      "id": "dc42014e-74b2-4867-ae48-501f7fd8ab45",
+      "merchant_id": "93b27ea6-ab4a-40b6-871a-0136df9d419b",
+      "business_name": "Gopal Dairy Point",
+      "category": "Dairy & Milk Point",
+      "business_category": "Dairy & Milk Point",
+      "village": "Dairy & Milk Point",
+      "district": "Rampur",
+      "state": "Varanasi",
+      "location": "Uttar Pradesh",
+      "description": "Fresh milk, curd, paneer, and bilona ghee",
+      "address": null,
+      "phone": null,
+      "created_at": "2026-09-09T18:31:03.499Z",
+      "updated_at": "2026-09-09T18:31:03.499Z"
+    },
+    {
+      "id": "bec552a0-f7a8-4d66-878a-e246be4f4375",
+      "merchant_id": "f907234a-085e-45a2-812c-4bf23ad7c701",
+      "business_name": "Sri Lakshmi Provisions",
+      "category": "Grocery / Kirana",
+      "business_category": "Grocery / Kirana",
+      "village": "Grocery / Kirana",
+      "district": "Rampur",
+      "state": "Varanasi",
+      "location": "Uttar Pradesh",
+      "description": "Near Gram Panchayat Office",
+      "address": "Daily staples, grains, and FMCG store",
+      "phone": null,
+      "created_at": "2026-09-09T18:31:03.492Z",
+      "updated_at": "2026-09-09T18:31:03.492Z"
+    },
+    {
+      "id": "a306d7f6-a831-4daf-a4a4-7dc2ffb9beb0",
+      "merchant_id": "590fa39b-0238-4ab4-bf82-42b687bdaf33",
+      "business_name": "Gopal Dairy Point",
+      "category": "Dairy & Milk Point",
+      "business_category": "Dairy & Milk Point",
+      "village": "Dairy & Milk Point",
+      "district": "Rampur",
+      "state": "Varanasi",
+      "location": "Uttar Pradesh",
+      "description": "Fresh milk, curd, paneer, and bilona ghee",
+      "address": null,
+      "phone": null,
+      "created_at": "2026-09-09T18:30:07.567Z",
+      "updated_at": "2026-09-09T18:30:07.567Z"
+    },
+    {
+      "id": "82928f28-c9c8-4e7f-85c2-5b55b1829b7e",
+      "merchant_id": "89c4695c-9458-4a56-a75d-bd4b531ca9aa",
+      "business_name": "Sri Lakshmi Provisions",
+      "category": "Grocery / Kirana",
+      "business_category": "Grocery / Kirana",
+      "village": "Grocery / Kirana",
+      "district": "Rampur",
+      "state": "Varanasi",
+      "location": "Uttar Pradesh",
+      "description": "Near Gram Panchayat Office",
+      "address": "Daily staples, grains, and FMCG store",
+      "phone": null,
+      "created_at": "2026-09-09T18:30:07.562Z",
+      "updated_at": "2026-09-09T18:30:07.562Z"
+    },
     {
       "id": "6e04a7e1-3c5a-4745-b972-a715b095988a",
       "merchant_id": "747d2549-c775-4f0e-8568-b79cbc4d6b27",
@@ -358,6 +502,18 @@
     }
   ],
   "ledger_entries": [
+    {
+      "id": "7fc3c8c0-9fd7-4936-b50f-8453b0f67a83",
+      "merchant_id": "f907234a-085e-45a2-812c-4bf23ad7c701",
+      "business_id": "bec552a0-f7a8-4d66-878a-e246be4f4375",
+      "type": "2026-09-09",
+      "entry_type": "2026-09-09",
+      "amount": null,
+      "description": null,
+      "entry_date": "2026-09-09",
+      "created_at": "2026-09-09T18:31:03.501Z",
+      "updated_at": "2026-09-09T18:31:03.501Z"
+    },
     {
       "id": "90c453e0-3821-4a2d-aa75-adfdfcaad0b3",
       "merchant_id": "747d2549-c775-4f0e-8568-b79cbc4d6b27",
@@ -777,6 +933,21 @@
       "entry_date": "2026-09-09",
       "created_at": "2026-09-09T11:17:51.985Z",
       "updated_at": "2026-09-09T11:17:51.985Z"
+    }
+  ],
+  "problems": [
+    {
+      "id": "5bbcfbe6-529a-44a6-9963-5e3f23bcb165",
+      "merchant_id": null,
+      "business_id": null,
+      "title": "Solar cold storage inverter failure",
+      "description": "Battery pack inverter tripped during peak sunlight hours",
+      "category": "Equipment",
+      "location": "Storage Warehouse A",
+      "priority": "high",
+      "status": "open",
+      "created_at": "2026-09-09T18:31:43.972Z",
+      "updated_at": "2026-09-09T18:31:43.972Z"
     }
   ]
 }
