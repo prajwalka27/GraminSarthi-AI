@@ -3,15 +3,17 @@
 import { AlertTriangle, Percent, TrendingDown, TrendingUp, Wallet } from 'lucide-react'
 import { Card } from './primitives'
 import type { TranslationKey } from '@/lib/graminsarthi/i18n'
-import { formatINR, type Kpis } from '@/lib/graminsarthi/data'
+import { formatINR, type Financials, type Kpis } from '@/lib/graminsarthi/data'
 
 export function KpiPanel({
   t,
   kpis,
+  financials,
   remediation,
 }: {
   t: (k: TranslationKey) => string
   kpis: Kpis
+  financials?: Financials
   remediation: string
 }) {
   const pnlPositive = kpis.netPnlToday >= 0
@@ -37,9 +39,8 @@ export function KpiPanel({
             {t('netPnl')}
           </div>
           <div
-            className={`mt-2 font-mono text-2xl font-bold ${
-              pnlPositive ? 'text-emerald-400' : 'text-rose-400'
-            }`}
+            className={`mt-2 font-mono text-2xl font-bold ${pnlPositive ? 'text-emerald-400' : 'text-rose-400'
+              }`}
           >
             {pnlPositive ? '+' : ''}
             {formatINR(kpis.netPnlToday)}
@@ -52,9 +53,8 @@ export function KpiPanel({
             {t('operatingMargin')}
           </div>
           <div
-            className={`mt-2 font-mono text-2xl font-bold ${
-              kpis.operatingMargin >= 0 ? 'text-sky-300' : 'text-rose-400'
-            }`}
+            className={`mt-2 font-mono text-2xl font-bold ${kpis.operatingMargin >= 0 ? 'text-sky-300' : 'text-rose-400'
+              }`}
           >
             {kpis.operatingMargin.toFixed(1)}%
           </div>
@@ -66,14 +66,42 @@ export function KpiPanel({
             {t('monthlyTakeHome')}
           </div>
           <div
-            className={`mt-2 font-mono text-2xl font-bold ${
-              takeHomePositive ? 'text-amber-300' : 'text-rose-400'
-            }`}
+            className={`mt-2 font-mono text-2xl font-bold ${takeHomePositive ? 'text-amber-300' : 'text-rose-400'
+              }`}
           >
             {formatINR(kpis.monthlyTakeHome)}
           </div>
         </div>
       </div>
+
+      {financials && (
+        <div className="mt-4 rounded-xl border border-border/70 bg-secondary/40 p-3.5">
+          <div className="text-xs font-semibold text-muted-foreground mb-2 flex items-center justify-between">
+            <span className="text-foreground/90 font-medium">Backend Financial Summary</span>
+            <span className="text-[11px] font-mono text-muted-foreground">{financials.ledgerEntryCount ?? 0} entries</span>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+            <div className="rounded-lg bg-background/70 p-2 border border-border/50">
+              <span className="text-muted-foreground block text-[10px] uppercase tracking-wider">Gross Sales</span>
+              <span className="font-mono font-bold text-emerald-400">{formatINR(financials.grossSales ?? 0)}</span>
+            </div>
+            <div className="rounded-lg bg-background/70 p-2 border border-border/50">
+              <span className="text-muted-foreground block text-[10px] uppercase tracking-wider">Purchase Costs</span>
+              <span className="font-mono font-bold text-amber-400">{formatINR(financials.purchaseCosts ?? 0)}</span>
+            </div>
+            <div className="rounded-lg bg-background/70 p-2 border border-border/50">
+              <span className="text-muted-foreground block text-[10px] uppercase tracking-wider">Total Expenses</span>
+              <span className="font-mono font-bold text-rose-400">{formatINR(financials.totalExpenses ?? 0)}</span>
+            </div>
+            <div className="rounded-lg bg-background/70 p-2 border border-border/50">
+              <span className="text-muted-foreground block text-[10px] uppercase tracking-wider">Gross Profit</span>
+              <span className={`font-mono font-bold ${(financials.grossProfit ?? 0) >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                {formatINR(financials.grossProfit ?? 0)}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {kpis.leak ? (
         <div

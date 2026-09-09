@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { SplashScreen } from '@/components/graminsarthi/splash-screen'
 import { AuthScreen } from '@/components/graminsarthi/auth-screen'
 import { Dashboard } from '@/components/graminsarthi/dashboard'
@@ -13,11 +13,18 @@ export default function Page() {
   const [screen, setScreen] = useState<Screen>('SPLASH')
   const [lang, setLang] = useState<Lang>('en')
   const [shop, setShop] = useState<ShopProfileKey>('kirana')
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [customShopName, setCustomShopName] = useState<string | undefined>()
-  const [customCategory, setCustomCategory] = useState<string | undefined>()
+  const [merchantId, setMerchantId] = useState<string | undefined>(undefined)
 
   const t = useMemo(() => makeT(lang), [lang])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedMerchantId = localStorage.getItem('graminsarthi.merchantId') || sessionStorage.getItem('graminsarthi.merchantId')
+      if (savedMerchantId) {
+        setMerchantId(savedMerchantId)
+      }
+    }
+  }, [])
 
   if (screen === 'SPLASH') {
     return (
@@ -37,11 +44,13 @@ export default function Page() {
         onLangChange={setLang}
         t={t}
         onBack={() => setScreen('SPLASH')}
-        onEnter={(selectedShop, shopName, category, isAdminLogin) => {
+        onEnter={(selectedShop, mId) => {
           setShop(selectedShop)
-          setIsAdmin(!!isAdminLogin)
-          setCustomShopName(shopName)
-          setCustomCategory(category)
+          setMerchantId(mId)
+          if (typeof window !== 'undefined') {
+            localStorage.setItem('graminsarthi.merchantId', mId)
+            sessionStorage.setItem('graminsarthi.merchantId', mId)
+          }
           setScreen('DASHBOARD')
         }}
       />
@@ -50,19 +59,23 @@ export default function Page() {
 
   return (
     <Dashboard
-      key={`${shop}-${isAdmin}`}
+      key={`${shop}-${merchantId}`}
       lang={lang}
       onLangChange={setLang}
       t={t}
       initialShop={shop}
-      customShopName={customShopName}
-      customCategory={customCategory}
-      isAdmin={isAdmin}
+      merchantId={merchantId}
       onLogout={() => {
+        setMerchantId(undefined)
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('graminsarthi.merchantId')
+          localStorage.removeItem('graminsarthi.businessId')
+          localStorage.removeItem('graminsarthi.mobile')
+          sessionStorage.removeItem('graminsarthi.merchantId')
+          sessionStorage.removeItem('graminsarthi.businessId')
+          sessionStorage.removeItem('graminsarthi.mobile')
+        }
         setScreen('AUTH')
-        setIsAdmin(false)
-        setCustomShopName(undefined)
-        setCustomCategory(undefined)
       }}
     />
   )

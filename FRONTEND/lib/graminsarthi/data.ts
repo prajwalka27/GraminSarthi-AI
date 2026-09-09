@@ -18,6 +18,9 @@ export type ShopProfile = {
   dailySales: number
   dailyExpenses: number
   monthlyInvestment: number
+  grossSales?: number
+  purchaseCosts?: number
+  totalExpenses?: number
   underperformingItems: string[]
   starProduct: string
   opportunities: OpportunityDetail[]
@@ -69,6 +72,13 @@ export type Financials = {
   dailySales: number
   dailyExpenses: number
   monthlyInvestment: number
+  grossSales?: number
+  purchaseCosts?: number
+  totalExpenses?: number
+  grossProfit?: number
+  netProfit?: number
+  operatingMargin?: number
+  ledgerEntryCount?: number
 }
 
 export type Kpis = {
@@ -82,6 +92,21 @@ export type Kpis = {
 }
 
 export function computeKpis(f: Financials): Kpis {
+  if (f.grossProfit !== undefined && f.netProfit !== undefined) {
+    const grossSales = f.grossSales ?? f.dailySales
+    const monthlyRevenue = grossSales * 30
+    const monthlyCost = monthlyRevenue - f.netProfit
+    return {
+      netPnlToday: f.netProfit,
+      operatingMargin: f.operatingMargin ?? 0,
+      monthlyTakeHome: f.netProfit,
+      monthlyRevenue,
+      monthlyCost,
+      leak: (f.totalExpenses ?? f.dailyExpenses) > grossSales && grossSales > 0,
+      leakAmount: Math.max(0, (f.totalExpenses ?? f.dailyExpenses) - grossSales),
+    }
+  }
+
   const monthlyRevenue = f.dailySales * 30
   const monthlyDirectCost = f.dailyExpenses * 30
   const monthlyCost = monthlyDirectCost + f.monthlyInvestment

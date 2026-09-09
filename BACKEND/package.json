@@ -5,15 +5,21 @@
     "scripts": {
         "dev": "tsx server.ts",
         "start": "tsx server.ts",
-        "typecheck": "tsc --noEmit --target ES2022 --module NodeNext --moduleResolution NodeNext --skipLibCheck server.ts"
+        "typecheck": "tsc --noEmit",
+        "typecheck:legacy": "tsc --noEmit --target ES2022 --module NodeNext --moduleResolution NodeNext --skipLibCheck server.ts",
+        "db:init": "tsx db/init.ts",
+        "db:seed": "tsx db/seed.ts"
     },
     "dependencies": {
-        "@supabase/supabase-js": "^2.116.0",
+        "bcryptjs": "^3.0.3",
         "dotenv": "^16.4.7",
+        "pg": "^8.23.0",
         "tsx": "^4.20.3",
         "typescript": "^5.7.3"
     },
     "devDependencies": {
-        "@types/node": "^24.13.3"
+        "@types/bcryptjs": "^2.4.6",
+        "@types/node": "^24.10.4",
+        "@types/pg": "^8.23.1"
     }
 }

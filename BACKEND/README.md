@@ -1,15 +1,12 @@
 # GraminSarthi-AI Backend
 
-The backend is available as a standalone server in `server.ts`. The same API is
-also available through the existing Next.js App Router project.
+The backend is an independent Node.js and TypeScript service using an in-memory
+store. Data is cleared whenever the server restarts. No database is required.
+
+The server uses Node's built-in HTTP module and `tsx`; Express and database
+packages are not required.
 
 ## Run
-
-```bash
-cd ../FRONTEND
-npm install
-npm run dev
-```
 
 To run the standalone server:
 
@@ -19,20 +16,16 @@ npm install
 npm run dev
 ```
 
-It listens on `http://localhost:4000` by default. Set `PORT` to change it.
+It listens on `http://localhost:5000` by default. Set `PORT` to change it.
 
-Create `FRONTEND/.env.local` or `BACKEND/.env`:
+Create `BACKEND/.env`:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+PORT=5000
+FRONTEND_URL=http://localhost:3000
 ```
 
-Run the database setup from:
-
-```text
-BACKEND/schema.sql
-```
+No database setup is required.
 
 ## API Routes
 
@@ -74,4 +67,4 @@ Check the server before running it:
 npm run typecheck
 ```
 
-Authentication uses Supabase phone OTP. Database access is protected by Supabase Row Level Security, so users can only access their own merchant, business, ledger, and expense data.
+The store is process-local and resets when the server restarts. Business and ledger operations verify merchant ownership before returning or changing records.
