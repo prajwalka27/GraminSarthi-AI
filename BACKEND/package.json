@@ -1,0 +1,19 @@
+{
+    "name": "graminsarthi-backend",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "tsx server.ts",
+        "start": "tsx server.ts",
+        "typecheck": "tsc --noEmit --target ES2022 --module NodeNext --moduleResolution NodeNext --skipLibCheck server.ts"
+    },
+    "dependencies": {
+        "@supabase/supabase-js": "^2.116.0",
+        "dotenv": "^16.4.7",
+        "tsx": "^4.20.3",
+        "typescript": "^5.7.3"
+    },
+    "devDependencies": {
+        "@types/node": "^24.10.4"
+    }
+}
