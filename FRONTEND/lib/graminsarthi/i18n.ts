@@ -91,6 +91,22 @@ export type TranslationKey =
   | 'calculateEmi'
   | 'years'
   | 'months'
+  | 'welcome_back'
+  | 'login_subtitle'
+  | 'merchant'
+  | 'admin'
+  | 'email_or_phone'
+  | 'enter_email_or_phone'
+  | 'password'
+  | 'enter_password'
+  | 'remember_me'
+  | 'forgot_password'
+  | 'login_btn'
+  | 'no_account'
+  | 'sign_up'
+  | 'already_have_account'
+  | 'login_link'
+  | 'login_as_admin'
 
 type Dict = Record<TranslationKey, string>
 
@@ -176,6 +192,22 @@ const en: Dict = {
   calculateEmi: 'Calculate EMI',
   years: 'years',
   months: 'months',
+  welcome_back: 'Welcome Back',
+  login_subtitle: 'Login to continue to your account',
+  merchant: 'Merchant',
+  admin: 'Admin',
+  email_or_phone: 'Email / Mobile Number',
+  enter_email_or_phone: 'Enter your email or mobile number',
+  password: 'Password',
+  enter_password: 'Enter your password',
+  remember_me: 'Remember me',
+  forgot_password: 'Forgot Password?',
+  login_btn: 'LOGIN',
+  no_account: "Don't have an account?",
+  sign_up: 'Sign Up',
+  already_have_account: 'Already have an account?',
+  login_link: 'Login',
+  login_as_admin: 'LOGIN AS ADMIN',
 }
 
 const hi: Dict = {
@@ -255,6 +287,22 @@ const hi: Dict = {
   calculateEmi: 'ईएमआई की गणना करें',
   years: 'वर्ष',
   months: 'महीने',
+  welcome_back: 'वापसी पर स्वागत है',
+  login_subtitle: 'अपने खाते में जारी रखने के लिए लॉगिन करें',
+  merchant: 'व्यापारी',
+  admin: 'व्यवस्थापक',
+  email_or_phone: 'ईमेल / मोबाइल नंबर',
+  enter_email_or_phone: 'अपना ईमेल या मोबाइल नंबर दर्ज करें',
+  password: 'पासवर्ड',
+  enter_password: 'अपना पासवर्ड दर्ज करें',
+  remember_me: 'मुझे याद रखें',
+  forgot_password: 'पासवर्ड भूल गए?',
+  login_btn: 'लॉगिन',
+  no_account: 'खाता नहीं है?',
+  sign_up: 'साइन अप',
+  already_have_account: 'पहले से ही एक खाता है?',
+  login_link: 'लॉगिन',
+  login_as_admin: 'व्यवस्थापक के रूप में लॉगिन करें',
 }
 
 const ta: Dict = {
@@ -492,6 +540,22 @@ const kn: Dict = {
   calculateEmi: 'EMI ಲೆಕ್ಕಾಚಾರ',
   years: 'ವರ್ಷಗಳು',
   months: 'ತಿಂಗಳುಗಳು',
+  welcome_back: 'ಸ್ವಾಗತ',
+  login_subtitle: 'ನಿಮ್ಮ ಖಾತೆಗೆ ಮುಂದುವರಿಯಲು ಲಾಗಿನ್ ಮಾಡಿ',
+  merchant: 'ವ್ಯಾಪಾರಿ',
+  admin: 'ನಿರ್ವಾಹಕ',
+  email_or_phone: 'ಇಮೇಲ್ / ಮೊಬೈಲ್ ಸಂಖ್ಯೆ',
+  enter_email_or_phone: 'ನಿಮ್ಮ ಇಮೇಲ್ ಅಥವಾ ಮೊಬೈಲ್ ಸಂಖ್ಯೆ ನಮೂದಿಸಿ',
+  password: 'ಪಾಸ್ವರ್ಡ್',
+  enter_password: 'ನಿಮ್ಮ ಪಾಸ್ವರ್ಡ್ ನಮೂದಿಸಿ',
+  remember_me: 'ನನ್ನನ್ನು ನೆನಪಿಡಿ',
+  forgot_password: 'ಪಾಸ್ವರ್ಡ್ ಮರೆತಿರಾ?',
+  login_btn: 'ಲಾಗಿನ್',
+  no_account: 'ಖಾತೆ ಇಲ್ಲವೇ?',
+  sign_up: 'ಸೈನ್ ಅಪ್',
+  already_have_account: 'ಈಗಾಗಲೇ ಖಾತೆ ಹೊಂದಿದ್ದೀರಾ?',
+  login_link: 'ಲಾಗಿನ್',
+  login_as_admin: 'ನಿರ್ವಾಹಕರಾಗಿ ಲಾಗಿನ್ ಮಾಡಿ',
 }
 
 const ml: Dict = {

@@ -1,7 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
-import { LogOut, Store } from 'lucide-react'
+import { useMemo, useState, useEffect } from 'react'
+import { LogOut, Store, Users, CheckCircle, Clock } from 'lucide-react'
 import { BrandMark } from './primitives'
 import { LanguageSelect } from './language-select'
 import { LedgerCard } from './ledger-card'
@@ -11,6 +11,7 @@ import { WhatIfSimulator } from './whatif-simulator'
 import { SchemeMatcher } from './scheme-matcher'
 import { ActionSteps } from './action-steps'
 import { FinanceCalculator } from './finance-calculator'
+import { SwappingPortal } from './swapping-portal'
 import type { Lang, TranslationKey } from '@/lib/graminsarthi/i18n'
 import {
   computeKpis,
@@ -23,7 +24,7 @@ import {
 } from '@/lib/graminsarthi/data'
 import { useGraminsarthiStore } from '@/hooks/use-graminsarthi-store'
 
-type DashboardTab = 'LEDGER' | 'FEASIBILITY' | 'FINANCE_CALCULATOR'
+type DashboardTab = 'LEDGER' | 'FEASIBILITY' | 'FINANCE_CALCULATOR' | 'SWAPPING'
 
 
 export function Dashboard({
@@ -31,12 +32,18 @@ export function Dashboard({
   onLangChange,
   t,
   initialShop,
+  customShopName,
+  customCategory,
+  isAdmin,
   onLogout,
 }: {
   lang: Lang
   onLangChange: (l: Lang) => void
   t: (k: TranslationKey) => string
   initialShop: ShopProfileKey
+  customShopName?: string
+  customCategory?: string
+  isAdmin?: boolean
   onLogout: () => void
 }) {
   const {
@@ -60,10 +67,83 @@ export function Dashboard({
   const profile = getShopProfile(shopKey, lang)
   const remediationText = getRemediation(shopKey, lang)
 
+  // Sync custom category if available (e.g. from registration)
+  useEffect(() => {
+    if (customCategory && tradeCategory !== customCategory) {
+      setTradeCategory(customCategory)
+    }
+  }, [customCategory, tradeCategory, setTradeCategory])
+
   const [pulse, setPulse] = useState(0)
   const [activeTab, setActiveTab] = useState<DashboardTab>('LEDGER')
 
   const kpis = useMemo(() => computeKpis(financials), [financials])
+
+  if (isAdmin) {
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur-xl">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-3 px-4 py-3 sm:px-6">
+            <div className="flex items-center gap-3">
+              <BrandMark className="h-10 w-10 text-sm" />
+              <div>
+                <span className="text-base font-bold text-foreground">GraminSarthi AI</span>
+                <p className="text-xs text-emerald-400">Admin Portal</p>
+              </div>
+            </div>
+            <div className="ml-auto flex items-center gap-3">
+              <button
+                onClick={onLogout}
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-border bg-card px-3 text-sm font-medium text-muted-foreground transition hover:border-rose-500/40 hover:text-rose-300"
+              >
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            </div>
+          </div>
+        </header>
+        <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
+          <h2 className="text-2xl font-bold text-foreground mb-6">Merchant Registrations</h2>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5">
+              <div className="flex items-center gap-4">
+                <div className="h-10 w-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">
+                  <CheckCircle className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground">Sri Lakshmi Provisions</h3>
+                  <p className="text-sm text-muted-foreground">Trade Category: Kirana • Reg: Today</p>
+                </div>
+              </div>
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded-md">
+                Approved
+              </span>
+            </div>
+            
+            <div className="flex items-center justify-between rounded-xl border border-amber-500/30 bg-amber-500/5 p-5">
+              <div className="flex items-center gap-4">
+                <div className="h-10 w-10 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400">
+                  <Clock className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-foreground">{customShopName || 'New Merchant Store'}</h3>
+                  <p className="text-sm text-muted-foreground">Trade Category: {customCategory || 'Dairy'} • Reg: Just now</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button className="px-3 py-1.5 text-xs font-medium rounded-lg border border-border text-muted-foreground hover:bg-secondary">
+                  Reject
+                </button>
+                <button className="px-3 py-1.5 text-xs font-medium rounded-lg bg-emerald-600 text-white hover:bg-emerald-500 shadow-sm">
+                  Approve
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen">
@@ -78,7 +158,7 @@ export function Dashboard({
                   GraminSarthi AI
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground">{profile.name}</p>
+              <p className="text-xs text-muted-foreground">{customShopName || profile.name}</p>
             </div>
           </div>
 
@@ -143,6 +223,15 @@ export function Dashboard({
             >
               {t('tabFinanceCalculator')}
             </button>
+            <button
+              onClick={() => setActiveTab('SWAPPING')}
+              className={`min-h-12 border-b-2 px-1 text-sm font-semibold transition ${activeTab === 'SWAPPING'
+                  ? 'border-emerald-500 text-emerald-500'
+                  : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+            >
+              SWAPPING
+            </button>
           </div>
         </div>
       </header>
@@ -198,6 +287,12 @@ export function Dashboard({
         {activeTab === 'FINANCE_CALCULATOR' && (
           <div className="mx-auto max-w-3xl">
             <FinanceCalculator t={t} />
+          </div>
+        )}
+
+        {activeTab === 'SWAPPING' && (
+          <div className="mx-auto max-w-3xl">
+            <SwappingPortal t={t} inventoryItems={inventoryItems} />
           </div>
         )}
       </main>

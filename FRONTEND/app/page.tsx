@@ -13,6 +13,9 @@ export default function Page() {
   const [screen, setScreen] = useState<Screen>('SPLASH')
   const [lang, setLang] = useState<Lang>('en')
   const [shop, setShop] = useState<ShopProfileKey>('kirana')
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [customShopName, setCustomShopName] = useState<string | undefined>()
+  const [customCategory, setCustomCategory] = useState<string | undefined>()
 
   const t = useMemo(() => makeT(lang), [lang])
 
@@ -34,8 +37,11 @@ export default function Page() {
         onLangChange={setLang}
         t={t}
         onBack={() => setScreen('SPLASH')}
-        onEnter={(selectedShop) => {
+        onEnter={(selectedShop, shopName, category, isAdminLogin) => {
           setShop(selectedShop)
+          setIsAdmin(!!isAdminLogin)
+          setCustomShopName(shopName)
+          setCustomCategory(category)
           setScreen('DASHBOARD')
         }}
       />
@@ -44,12 +50,20 @@ export default function Page() {
 
   return (
     <Dashboard
-      key={shop}
+      key={`${shop}-${isAdmin}`}
       lang={lang}
       onLangChange={setLang}
       t={t}
       initialShop={shop}
-      onLogout={() => setScreen('AUTH')}
+      customShopName={customShopName}
+      customCategory={customCategory}
+      isAdmin={isAdmin}
+      onLogout={() => {
+        setScreen('AUTH')
+        setIsAdmin(false)
+        setCustomShopName(undefined)
+        setCustomCategory(undefined)
+      }}
     />
   )
 }

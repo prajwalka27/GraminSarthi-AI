@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { BookOpen, Plus, Trash2, Edit2, Check, X } from 'lucide-react'
-import { Card, CardHeader, Field, Select, TextInput } from './primitives'
+import { BookOpen, Plus, Trash2, Edit2, Check, X, Calculator } from 'lucide-react'
+import { Card, CardHeader, Field, Select, TextInput, PrimaryButton } from './primitives'
 import type { TranslationKey } from '@/lib/graminsarthi/i18n'
-import { TRADE_CATEGORIES, formatINR, type Financials } from '@/lib/graminsarthi/data'
+import { formatINR, type Financials } from '@/lib/graminsarthi/data'
 import type { Transaction, TransactionType } from '@/hooks/use-graminsarthi-store'
 
 function CurrencyInput({
@@ -68,6 +68,13 @@ export function LedgerCard({
   const [editAmount, setEditAmount] = useState(0)
   const [editDesc, setEditDesc] = useState('')
 
+  // Step-wise calculator states
+  const [calcIncome, setCalcIncome] = useState(financials.dailySales * 30)
+  const [calcExpense, setCalcExpense] = useState(financials.dailyExpenses * 30)
+  const [calcInvestment, setCalcInvestment] = useState(monthlyInvestment)
+  const [calcOverheads, setCalcOverheads] = useState(0)
+  const [calcResult, setCalcResult] = useState<number | null>(null)
+
   const handleAdd = () => {
     if (newAmount > 0) {
       addTransaction({ type: newType, amount: newAmount, description: newDesc || 'Transaction' })
@@ -92,6 +99,11 @@ export function LedgerCard({
     setEditingId(null)
   }
 
+  const handleCalculatePnL = () => {
+    const profitOrLoss = calcIncome - calcExpense - calcInvestment - calcOverheads
+    setCalcResult(profitOrLoss)
+  }
+
   return (
     <Card>
       <CardHeader
@@ -103,17 +115,9 @@ export function LedgerCard({
 
       <div className="space-y-6">
         <Field label={t('tradeCategory')} htmlFor="ledger-category">
-          <Select
-            id="ledger-category"
-            value={tradeCategory}
-            onChange={(e) => onTradeCategory(e.target.value)}
-          >
-            {TRADE_CATEGORIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </Select>
+          <div className="flex min-h-10 w-full items-center rounded-xl border border-input bg-secondary/50 px-3 text-sm text-muted-foreground font-medium">
+            {tradeCategory}
+          </div>
         </Field>
 
         <div className="space-y-3 border-t border-border pt-4">
@@ -199,6 +203,45 @@ export function LedgerCard({
               onChange={(n) => { setMonthlyInvestment(n); onRecalculate() }}
             />
           </Field>
+        </div>
+
+        {/* Step-wise P&L Calculator */}
+        <div className="border-t border-border pt-6 mt-6">
+          <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground mb-4">
+            <Calculator className="h-4 w-4 text-emerald-400" />
+            Step-Wise Monthly P&L Calculator
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Field label="Starting Income (Monthly)" htmlFor="calc-income">
+              <CurrencyInput id="calc-income" value={calcIncome} onChange={setCalcIncome} />
+            </Field>
+            <Field label="Total Expense (Monthly)" htmlFor="calc-expense">
+              <CurrencyInput id="calc-expense" value={calcExpense} onChange={setCalcExpense} />
+            </Field>
+            <Field label="Monthly Investment" htmlFor="calc-investment">
+              <CurrencyInput id="calc-investment" value={calcInvestment} onChange={setCalcInvestment} />
+            </Field>
+            <Field label="Monthly Overheads" htmlFor="calc-overheads">
+              <CurrencyInput id="calc-overheads" value={calcOverheads} onChange={setCalcOverheads} />
+            </Field>
+          </div>
+          
+          <PrimaryButton onClick={handleCalculatePnL} className="w-full mt-4">
+            Calculate Profit & Loss
+          </PrimaryButton>
+
+          {calcResult !== null && (
+            <div className={`mt-4 rounded-xl border p-4 text-center ${
+              calcResult >= 0 ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400' : 'border-rose-500/30 bg-rose-500/10 text-rose-400'
+            }`}>
+              <div className="text-xs font-semibold uppercase tracking-wider mb-1">
+                {calcResult >= 0 ? 'Net Profit' : 'Net Loss'}
+              </div>
+              <div className="text-2xl font-bold font-mono">
+                {formatINR(calcResult)}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </Card>

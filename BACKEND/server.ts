@@ -13,6 +13,7 @@ type Json = Record<string, unknown>
 if (!supabaseUrl || !supabaseAnonKey) {
     throw new Error('NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are required')
 }
+export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseAnonKey)
 
 function send(response: ServerResponse, status: number, body: Json) {
     response.writeHead(status, {
@@ -188,10 +189,10 @@ async function handle(request: IncomingMessage, response: ServerResponse) {
         const currentProfit = input.currentProfit
         const procurementReduction = input.procurementReduction
         const highMarginShift = input.highMarginShift
-        if (!nonNegativeNumber(currentProfit) || !nonNegativeNumber(procurementReduction) || !nonNegativeNumber(highMarginShift) || procurementReduction > 100 || highMarginShift > 100) {
+        if (typeof currentProfit !== 'number' || !Number.isFinite(currentProfit) || !nonNegativeNumber(procurementReduction) || !nonNegativeNumber(highMarginShift) || procurementReduction > 100 || highMarginShift > 100) {
             return send(response, 400, { success: false, error: 'Invalid feasibility values' })
         }
-        const projectedProfit = currentProfit * (1 + procurementReduction / 100 + highMarginShift / 100)
+        const projectedProfit = currentProfit + Math.abs(currentProfit) * (procurementReduction / 100 + highMarginShift / 100)
         const growthPercentage = currentProfit ? ((projectedProfit - currentProfit) / Math.abs(currentProfit)) * 100 : 0
         return send(response, 200, {
             success: true,
@@ -323,7 +324,7 @@ async function handle(request: IncomingMessage, response: ServerResponse) {
     return send(response, 404, { success: false, error: 'Route not found' })
 }
 
-createServer((request, response) => {
+createServer((request: IncomingMessage, response: ServerResponse) => {
     handle(request, response).catch(() => send(response, 500, { success: false, error: 'Internal server error' }))
 }).listen(port, () => {
     console.log(`GraminSarthi backend listening on http://localhost:${port}`)
