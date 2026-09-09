@@ -4,10 +4,11 @@ import { useEffect, useMemo, useState } from 'react'
 import { SplashScreen } from '@/components/graminsarthi/splash-screen'
 import { AuthScreen } from '@/components/graminsarthi/auth-screen'
 import { Dashboard } from '@/components/graminsarthi/dashboard'
+import { CustomerPortal } from '@/components/graminsarthi/customer-portal'
 import { makeT, type Lang } from '@/lib/graminsarthi/i18n'
 import type { ShopProfileKey } from '@/lib/graminsarthi/data'
 
-type Screen = 'SPLASH' | 'AUTH' | 'DASHBOARD'
+type Screen = 'SPLASH' | 'AUTH' | 'DASHBOARD' | 'CUSTOMER'
 
 export default function Page() {
   const [screen, setScreen] = useState<Screen>('SPLASH')
@@ -33,6 +34,18 @@ export default function Page() {
         onLangChange={setLang}
         t={t}
         onLaunch={() => setScreen('AUTH')}
+        onCustomer={() => setScreen('CUSTOMER')}
+      />
+    )
+  }
+
+  if (screen === 'CUSTOMER') {
+    return (
+      <CustomerPortal
+        lang={lang}
+        onLangChange={setLang}
+        onSwitchToMerchant={() => setScreen('AUTH')}
+        onBack={() => setScreen('SPLASH')}
       />
     )
   }
@@ -44,6 +57,7 @@ export default function Page() {
         onLangChange={setLang}
         t={t}
         onBack={() => setScreen('SPLASH')}
+        onSwitchToCustomer={() => setScreen('CUSTOMER')}
         onEnter={(selectedShop, mId) => {
           setShop(selectedShop)
           setMerchantId(mId)
@@ -65,6 +79,7 @@ export default function Page() {
       t={t}
       initialShop={shop}
       merchantId={merchantId}
+      onSwitchToCustomer={() => setScreen('CUSTOMER')}
       onLogout={() => {
         setMerchantId(undefined)
         if (typeof window !== 'undefined') {

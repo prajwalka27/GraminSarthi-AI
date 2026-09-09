@@ -8,12 +8,13 @@ import type { Lang, TranslationKey } from '@/lib/graminsarthi/i18n'
 import { apiRequest } from '@/lib/api'
 import { getTradeCategories, type ShopProfileKey } from '@/lib/graminsarthi/data'
 
-export function AuthScreen({ lang, onLangChange, t, onBack, onEnter }: {
+export function AuthScreen({ lang, onLangChange, t, onBack, onEnter, onSwitchToCustomer }: {
     lang: Lang
     onLangChange: (l: Lang) => void
     t: (k: TranslationKey) => string
     onBack: () => void
     onEnter: (shop: ShopProfileKey, merchantId: string) => void
+    onSwitchToCustomer?: () => void
 }) {
     const [mode, setMode] = useState<'login' | 'register'>('login')
     const [mobile, setMobile] = useState('')
@@ -286,6 +287,18 @@ export function AuthScreen({ lang, onLangChange, t, onBack, onEnter }: {
                             ))}
                         </div>
                     </div>
+
+                    {onSwitchToCustomer && (
+                        <div className="mt-5 border-t border-border/60 pt-4 text-center">
+                            <button
+                                type="button"
+                                onClick={onSwitchToCustomer}
+                                className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-400 transition hover:text-emerald-300"
+                            >
+                                <span>🛒 Looking for Village Market & Khata? Go to Customer Portal →</span>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </main>

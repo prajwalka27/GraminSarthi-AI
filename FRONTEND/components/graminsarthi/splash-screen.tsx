@@ -17,11 +17,13 @@ export function SplashScreen({
   onLangChange,
   t,
   onLaunch,
+  onCustomer,
 }: {
   lang: Lang
   onLangChange: (l: Lang) => void
   t: (k: TranslationKey) => string
   onLaunch: () => void
+  onCustomer?: () => void
 }) {
   const chips = [
     { icon: BarChart3, label: t('chipLedger') },
@@ -73,17 +75,30 @@ export function SplashScreen({
           ))}
         </ul>
 
-        <div className="mt-10 w-full max-w-sm">
+        <div className="mt-10 flex w-full max-w-md flex-col gap-3 sm:flex-row">
           <button
             onClick={onLaunch}
-            className="group inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-600 px-6 text-lg font-semibold text-white shadow-xl shadow-emerald-600/25 transition hover:from-emerald-400 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 active:scale-[0.99]"
+            className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-600 px-5 text-base font-semibold text-white shadow-xl shadow-emerald-600/25 transition hover:from-emerald-400 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 active:scale-[0.99]"
           >
-            {t('launchCta')}
+            <span>🏪 {t('launchCta')}</span>
             <ArrowRight
-              className="h-5 w-5 transition-transform group-hover:translate-x-1"
+              className="h-4 w-4 transition-transform group-hover:translate-x-1"
               aria-hidden="true"
             />
           </button>
+
+          {onCustomer && (
+            <button
+              onClick={onCustomer}
+              className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 px-5 text-base font-semibold text-emerald-300 transition hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 active:scale-[0.99]"
+            >
+              <span>🛒 {lang === 'hi' ? 'गांव बाज़ार (Customer)' : 'Village Market'}</span>
+              <ArrowRight
+                className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </button>
+          )}
         </div>
       </div>
     </main>

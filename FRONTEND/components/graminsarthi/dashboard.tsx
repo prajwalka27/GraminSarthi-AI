@@ -18,13 +18,14 @@ import { Field, Select, TextInput } from './primitives'
 
 type DashboardTab = 'LEDGER' | 'FEASIBILITY' | 'FINANCE_CALCULATOR'
 
-export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLogout }: {
+export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLogout, onSwitchToCustomer }: {
   lang: Lang
   onLangChange: (l: Lang) => void
   t: (k: TranslationKey) => string
   initialShop: ShopProfileKey
   merchantId?: string
   onLogout: () => void
+  onSwitchToCustomer?: () => void
 }) {
   const {
     shopKey,
@@ -156,6 +157,16 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
                 ))}
               </select>
             </div>
+
+            {onSwitchToCustomer && (
+              <button
+                onClick={onSwitchToCustomer}
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 text-xs font-semibold text-emerald-300 transition hover:bg-emerald-500/20"
+                title="Open Village Customer Market & Khata"
+              >
+                <span>🛒 Customer Market</span>
+              </button>
+            )}
 
             <LanguageSelect lang={lang} onChange={onLangChange} compact />
 
