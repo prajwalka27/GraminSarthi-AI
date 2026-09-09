@@ -1,12 +1,13 @@
 /**
  * Standardized HTTP response utilities for GraminSarthi-AI backend
  */
-import type { ServerResponse } from "node:http";
+import type { ServerResponse, IncomingMessage } from "node:http";
 
-const FRONTEND_URL = process.env.FRONTEND_URL || process.env.FRONTEND_ORIGIN || "http://localhost:3000";
+const DEFAULT_FRONTEND = process.env.FRONTEND_URL || process.env.FRONTEND_ORIGIN || "http://localhost:3000";
 
-export function setCorsHeaders(res: ServerResponse) {
-    res.setHeader("Access-Control-Allow-Origin", FRONTEND_URL);
+export function setCorsHeaders(res: ServerResponse, req?: IncomingMessage) {
+    const origin = (req?.headers?.origin as string) || DEFAULT_FRONTEND;
+    res.setHeader("Access-Control-Allow-Origin", origin);
     res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.setHeader("Access-Control-Allow-Credentials", "true");

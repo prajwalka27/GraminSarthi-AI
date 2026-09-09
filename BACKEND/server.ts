@@ -43,6 +43,7 @@ async function readJSON(req: http.IncomingMessage): Promise<JsonObject> {
 const server = http.createServer(async (req, res) => {
     try {
         setCorsHeaders(res);
+        setCorsHeaders(res, req);
 
         if (req.method === "OPTIONS") {
             res.writeHead(204);
@@ -522,6 +523,7 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
     console.log(`GraminSarthi AI backend running at http://localhost:${PORT}`);
     initDatabaseSchema().catch((err) => {
         console.warn("[DB] Note on schema initialization:", err instanceof Error ? err.message : err);
