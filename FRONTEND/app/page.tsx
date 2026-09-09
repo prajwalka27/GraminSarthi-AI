@@ -5,10 +5,11 @@ import { SplashScreen } from '@/components/graminsarthi/splash-screen'
 import { AuthScreen } from '@/components/graminsarthi/auth-screen'
 import { Dashboard } from '@/components/graminsarthi/dashboard'
 import { CustomerPortal } from '@/components/graminsarthi/customer-portal'
+import { HostPortal } from '@/components/graminsarthi/host-portal'
 import { makeT, type Lang } from '@/lib/graminsarthi/i18n'
 import type { ShopProfileKey } from '@/lib/graminsarthi/data'
 
-type Screen = 'SPLASH' | 'AUTH' | 'DASHBOARD' | 'CUSTOMER'
+type Screen = 'SPLASH' | 'AUTH' | 'DASHBOARD' | 'CUSTOMER' | 'HOST'
 
 export default function Page() {
   const [screen, setScreen] = useState<Screen>('SPLASH')
@@ -35,6 +36,7 @@ export default function Page() {
         t={t}
         onLaunch={() => setScreen('AUTH')}
         onCustomer={() => setScreen('CUSTOMER')}
+        onHost={() => setScreen('HOST')}
       />
     )
   }
@@ -44,6 +46,19 @@ export default function Page() {
       <CustomerPortal
         lang={lang}
         onLangChange={setLang}
+        onSwitchToMerchant={() => setScreen('AUTH')}
+        onSwitchToHost={() => setScreen('HOST')}
+        onBack={() => setScreen('SPLASH')}
+      />
+    )
+  }
+
+  if (screen === 'HOST') {
+    return (
+      <HostPortal
+        lang={lang}
+        onLangChange={setLang}
+        onSwitchToCustomer={() => setScreen('CUSTOMER')}
         onSwitchToMerchant={() => setScreen('AUTH')}
         onBack={() => setScreen('SPLASH')}
       />
@@ -80,6 +95,7 @@ export default function Page() {
       initialShop={shop}
       merchantId={merchantId}
       onSwitchToCustomer={() => setScreen('CUSTOMER')}
+      onSwitchToHost={() => setScreen('HOST')}
       onLogout={() => {
         setMerchantId(undefined)
         if (typeof window !== 'undefined') {

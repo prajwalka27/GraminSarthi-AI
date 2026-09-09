@@ -18,12 +18,14 @@ export function SplashScreen({
   t,
   onLaunch,
   onCustomer,
+  onHost,
 }: {
   lang: Lang
   onLangChange: (l: Lang) => void
   t: (k: TranslationKey) => string
   onLaunch: () => void
   onCustomer?: () => void
+  onHost?: () => void
 }) {
   const chips = [
     { icon: BarChart3, label: t('chipLedger') },
@@ -75,30 +77,37 @@ export function SplashScreen({
           ))}
         </ul>
 
-        <div className="mt-10 flex w-full max-w-md flex-col gap-3 sm:flex-row">
-          <button
-            onClick={onLaunch}
-            className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-600 px-5 text-base font-semibold text-white shadow-xl shadow-emerald-600/25 transition hover:from-emerald-400 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 active:scale-[0.99]"
-          >
-            <span>🏪 {t('launchCta')}</span>
-            <ArrowRight
-              className="h-4 w-4 transition-transform group-hover:translate-x-1"
-              aria-hidden="true"
-            />
-          </button>
-
+        <div className="mt-10 grid w-full max-w-xl grid-cols-1 gap-3 sm:grid-cols-3">
           {onCustomer && (
             <button
               onClick={onCustomer}
-              className="group inline-flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 px-5 text-base font-semibold text-emerald-300 transition hover:bg-emerald-500/20 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 active:scale-[0.99]"
+              className="group flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-center transition hover:bg-emerald-500/20 active:scale-[0.99]"
             >
-              <span>🛒 {lang === 'hi' ? 'गांव बाज़ार (Customer)' : 'Village Market'}</span>
-              <ArrowRight
-                className="h-4 w-4 transition-transform group-hover:translate-x-1"
-                aria-hidden="true"
-              />
+              <span className="text-2xl">🛒</span>
+              <span className="text-sm font-bold text-emerald-300">Customer Market</span>
+              <span className="text-[11px] text-muted-foreground">Self-Register & Shop</span>
             </button>
           )}
+
+          {onHost && (
+            <button
+              onClick={onHost}
+              className="group flex flex-col items-center justify-center gap-1.5 rounded-2xl border border-purple-500/40 bg-purple-500/10 p-4 text-center transition hover:bg-purple-500/20 active:scale-[0.99]"
+            >
+              <span className="text-2xl">👑</span>
+              <span className="text-sm font-bold text-purple-300">Host / Admin</span>
+              <span className="text-[11px] text-muted-foreground">Access Everything</span>
+            </button>
+          )}
+
+          <button
+            onClick={onLaunch}
+            className="group flex flex-col items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-br from-emerald-600 to-sky-600 p-4 text-center text-white shadow-lg transition hover:from-emerald-500 hover:to-sky-500 active:scale-[0.99]"
+          >
+            <span className="text-2xl">🏪</span>
+            <span className="text-sm font-bold">Merchant Portal</span>
+            <span className="text-[11px] text-emerald-100/80">Ledger & AI Feasibility</span>
+          </button>
         </div>
       </div>
     </main>

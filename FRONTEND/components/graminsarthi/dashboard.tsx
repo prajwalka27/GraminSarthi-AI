@@ -18,7 +18,7 @@ import { Field, Select, TextInput } from './primitives'
 
 type DashboardTab = 'LEDGER' | 'FEASIBILITY' | 'FINANCE_CALCULATOR'
 
-export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLogout, onSwitchToCustomer }: {
+export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLogout, onSwitchToCustomer, onSwitchToHost }: {
   lang: Lang
   onLangChange: (l: Lang) => void
   t: (k: TranslationKey) => string
@@ -26,6 +26,7 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
   merchantId?: string
   onLogout: () => void
   onSwitchToCustomer?: () => void
+  onSwitchToHost?: () => void
 }) {
   const {
     shopKey,
@@ -165,6 +166,16 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
                 title="Open Village Customer Market & Khata"
               >
                 <span>🛒 Customer Market</span>
+              </button>
+            )}
+
+            {onSwitchToHost && (
+              <button
+                onClick={onSwitchToHost}
+                className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-purple-500/30 bg-purple-500/10 px-3 text-xs font-semibold text-purple-300 transition hover:bg-purple-500/20"
+                title="Open Host & Village Admin Portal"
+              >
+                <span>👑 Host Portal</span>
               </button>
             )}
 
