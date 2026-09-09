@@ -1,0 +1,12 @@
+{
+  "name": "graminsarthi-ai-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GraminSarthi AI - Empowering Rural Bharat with AI-Powered Financial Advisory, Digital Khata, and Village Marketplace",
+  "scripts": {
+    "dev:backend": "npm --prefix BACKEND run dev",
+    "dev:frontend": "npm --prefix FRONTEND run dev",
+    "build:frontend": "npm --prefix FRONTEND run build",
+    "build:backend": "npm --prefix BACKEND run typecheck"
+  }
+}
