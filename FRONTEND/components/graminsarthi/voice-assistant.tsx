@@ -62,6 +62,33 @@ const QUICK_CHIPS: Partial<Record<Lang, { label: string; prompt: string; icon: a
   ],
 }
 
+const CUSTOMER_CHIPS: Partial<Record<Lang, { label: string; prompt: string; icon: any }[]>> = {
+  en: [
+    { label: "Village Weather", prompt: "What is the weather today in our village?", icon: CloudSun },
+    { label: "Rice & Milk Rates", prompt: "What are the current rates for rice and fresh milk?", icon: Receipt },
+    { label: "Check Khata Balance", prompt: "How can I check my pending Khata credit balance?", icon: HelpCircle },
+    { label: "Calculate 5 kg Rice", prompt: "Calculate 5 * 48", icon: Calculator },
+    { label: "Store Open Hours", prompt: "What are the village store opening hours?", icon: HelpCircle },
+    { label: "Translate to Kannada", prompt: "Translate this to Kannada: Welcome to our village store", icon: Languages },
+  ],
+  hi: [
+    { label: "गांव का मौसम", prompt: "आज हमारे गांव का मौसम कैसा है?", icon: CloudSun },
+    { label: "चावल और दूध के दाम", prompt: "दुकान में चावल और ताजे दूध की कीमत क्या है?", icon: Receipt },
+    { label: "खाता बकाया देखें", prompt: "मेरा खाता कितना बाकी है?", icon: HelpCircle },
+    { label: "5 किलो चावल का हिसाब", prompt: "5 * 48 की गणना करें", icon: Calculator },
+    { label: "दुकान का समय", prompt: "गांव की दुकान खुलने का समय क्या है?", icon: HelpCircle },
+    { label: "कन्नड़ में अनुवाद", prompt: "इस वाक्य का कन्नड़ में अनुवाद करें: आपका स्वागत है", icon: Languages },
+  ],
+  kn: [
+    { label: "ಇಂದಿನ ಹವಾಮಾನ", prompt: "ಇಂದು ನಮ್ಮ ಗ್ರಾಮದ ಹವಾಮಾನ ಹೇಗಿದೆ?", icon: CloudSun },
+    { label: "ಅಕ್ಕಿ ಮತ್ತು ಹಾಲಿನ ಬೆಲೆ", prompt: "ಅಕ್ಕಿ ಮತ್ತು ತಾಜಾ ಹಾಲಿನ ಇಂದಿನ ಬೆಲೆ ಎಷ್ಟು?", icon: Receipt },
+    { label: "ಖಾತೆ ಬಾಕಿ ಮಾಹಿತಿ", prompt: "ನನ್ನ ಬಾಕಿ ಖಾತೆ ಎಷ್ಟು?", icon: HelpCircle },
+    { label: "5 ಕೆಜಿ ಅಕ್ಕಿ ಲೆಕ್ಕ", prompt: "5 * 48 ಲೆಕ್ಕಾಚಾರ ಮಾಡಿ", icon: Calculator },
+    { label: "ಅಂಗಡಿ ತೆರೆಯುವ ಸಮಯ", prompt: "ಗ್ರಾಮದ ಅಂಗಡಿ ತೆರೆಯುವ ಸಮಯ ಯಾವುದು?", icon: HelpCircle },
+    { label: "ಕನ್ನಡಕ್ಕೆ ಭಾಷಾಂತರ", prompt: "Translate to Kannada: Welcome to our village store", icon: Languages },
+  ],
+}
+
 const TOOL_BADGES: Record<string, { label: string; color: string }> = {
   live_weather_service: { label: "🌦️ Live Weather (Open-Meteo)", color: "bg-sky-500/15 text-sky-300 border-sky-500/30" },
   math_calculator: { label: "🧮 Math & GST Calculator", color: "bg-amber-500/15 text-amber-300 border-amber-500/30" },
@@ -70,6 +97,7 @@ const TOOL_BADGES: Record<string, { label: string; color: string }> = {
   rural_tax_guidance: { label: "📜 Rural Tax Advisory", color: "bg-indigo-500/15 text-indigo-300 border-indigo-500/30" },
   business_growth_advisory: { label: "📈 Sales Growth Advisory", color: "bg-teal-500/15 text-teal-300 border-teal-500/30" },
   khata_credit_advisory: { label: "🤝 Credit & Khata Advisory", color: "bg-purple-500/15 text-purple-300 border-purple-500/30" },
+  village_store_inventory: { label: "🛒 Village Store Live Rates", color: "bg-amber-500/15 text-amber-300 border-amber-500/30" },
   multilingual_translator: { label: "🗣️ Multi-lingual Translator", color: "bg-blue-500/15 text-blue-300 border-blue-500/30" },
   gemini_2_flash: { label: "🧠 Google Gemini AI", color: "bg-violet-500/15 text-violet-300 border-violet-500/30" },
   graminsarthi_assistant_engine: { label: "⚡ GraminSarthi Core", color: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30" },
@@ -79,12 +107,14 @@ export function VoiceAssistant({
   lang: initialLang = 'en',
   merchantId,
   businessId,
+  mode = 'merchant',
   isModal = false,
   onClose
 }: {
   lang?: Lang
   merchantId?: string
   businessId?: string
+  mode?: 'merchant' | 'customer'
   isModal?: boolean
   onClose?: () => void
 }) {
@@ -102,11 +132,19 @@ export function VoiceAssistant({
 
   // Initialize initial greeting
   useEffect(() => {
-    const greetings: Partial<Record<Lang, string>> = {
+    const merchantGreetings: Partial<Record<Lang, string>> = {
       en: "Hello! I am your GraminSarthi AI Voice Assistant. Speak or type to ask about your shop ledger, current weather, GST rules, math calculations, or sales growth.",
       hi: "नमस्ते! मैं आपका ग्रामसारथी एआई वॉयस असिस्टेंट हूँ। आप बोलकर या लिखकर अपने बहीखाते, आज के मौसम, जीएसटी, गणना या दुकान बढ़ाने की सलाह पूछ सकते हैं।",
       kn: "ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ ಗ್ರಾಮಸಾರಥಿ ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ ಧ್ವನಿ ಸಹಾಯಕ. ನಿಮ್ಮ ಅಂಗಡಿಯ ಲೆಡ್ಜರ್, ಇಂದಿನ ಹವಾಮಾನ, ಜಿಎಸ್‌ಟಿ, ಲೆಕ್ಕಾಚಾರ ಅಥವಾ ವ್ಯಾಪಾರ ಬೆಳವಣಿಗೆಯ ಬಗ್ಗೆ ಮಾತನಾಡಿ ಅಥವಾ ಟೈಪ್ ಮಾಡಿ ಕೇಳಬಹುದು."
     }
+
+    const customerGreetings: Partial<Record<Lang, string>> = {
+      en: "Namaskara! I am your Village Store AI Assistant. Press the microphone to speak or ask about grocery item prices, today's weather, your Khata balance, or bill calculations.",
+      hi: "नमस्ते! मैं आपके ग्राम स्टोर का एआई सहायक हूँ। बोलकर या लिखकर दुकान के सामान के दाम, मौसम, खाता या बिल की गणना पूछें।",
+      kn: "ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ ಗ್ರಾಮದ ಅಂಗಡಿಯ ಧ್ವನಿ ಸಹಾಯಕ. ಅಂಗಡಿಯ ಸಾಮಗ್ರಿಗಳು, ಬೆಲೆಗಳು, ಇಂದಿನ ಹವಾಮಾನ, ಖಾತೆ ಬಾಕಿ ಅಥವಾ ಬಿಲ್ ಲೆಕ್ಕಾಚಾರದ ಬಗ್ಗೆ ಮಾತನಾಡಬಹುದು."
+    }
+
+    const greetings = mode === 'customer' ? customerGreetings : merchantGreetings
 
     if (messages.length === 0) {
       setMessages([
@@ -119,7 +157,7 @@ export function VoiceAssistant({
         }
       ])
     }
-  }, [currentLang])
+  }, [currentLang, mode])
 
   // Scroll to bottom on new messages
   useEffect(() => {
@@ -334,7 +372,9 @@ export function VoiceAssistant({
     }
   }
 
-  const chips = QUICK_CHIPS[currentLang] || QUICK_CHIPS.en || []
+  const chips = mode === 'customer'
+    ? (CUSTOMER_CHIPS[currentLang] || CUSTOMER_CHIPS.en || [])
+    : (QUICK_CHIPS[currentLang] || QUICK_CHIPS.en || [])
 
   return (
     <div className={`flex flex-col bg-card border border-border rounded-2xl shadow-xl overflow-hidden ${isModal ? 'h-full' : 'min-h-[580px]'}`}>
@@ -352,13 +392,19 @@ export function VoiceAssistant({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <h3 className="text-base font-bold text-foreground">GraminSarthi Voice AI</h3>
+              <h3 className="text-base font-bold text-foreground">
+                {mode === 'customer'
+                  ? (currentLang === 'kn' ? 'ಗ್ರಾಮೀಣ ಅಂಗಡಿ ಧ್ವನಿ ಎಐ' : currentLang === 'hi' ? 'ग्राम स्टोर वॉयस एआई' : 'Village Store Voice AI')
+                  : 'GraminSarthi Voice AI'}
+              </h3>
               <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
-                Live Tools
+                {mode === 'customer' ? 'Customer Voice' : 'Live Tools'}
               </span>
             </div>
             <p className="text-xs text-muted-foreground">
-              {currentLang === 'kn' ? 'ಧ್ವನಿ ಮತ್ತು ಪಠ್ಯ ಸಹಾಯಕ' : currentLang === 'hi' ? 'आवाज़ और टेक्स्ट सहायक' : 'Speaks Kannada, Hindi & English'}
+              {mode === 'customer'
+                ? (currentLang === 'kn' ? 'ಸಾಮಗ್ರಿಗಳ ಬೆಲೆ, ಹವಾಮಾನ & ಖಾತೆ ವಿಚಾರಿಸಿ' : currentLang === 'hi' ? 'दाम, मौसम और खाते की जानकारी पूछें' : 'Ask about item rates, weather & Khata')
+                : (currentLang === 'kn' ? 'ಧ್ವನಿ ಮತ್ತು ಪಠ್ಯ ಸಹಾಯಕ' : currentLang === 'hi' ? 'आवाज़ और टेक्स्ट सहायक' : 'Speaks Kannada, Hindi & English')}
             </p>
           </div>
         </div>
@@ -461,10 +507,11 @@ export function VoiceAssistant({
               )}
 
               <div
-                className={`max-w-[82%] rounded-2xl p-4 shadow-md ${isUser
+                className={`max-w-[82%] rounded-2xl p-4 shadow-md ${
+                  isUser
                     ? 'bg-emerald-600 text-white rounded-br-xs'
                     : 'bg-card border border-border text-foreground rounded-bl-xs'
-                  }`}
+                }`}
               >
                 {/* TOOL BADGE FOR ASSISTANT */}
                 {!isUser && toolInfo && (
@@ -488,10 +535,11 @@ export function VoiceAssistant({
                     <button
                       type="button"
                       onClick={() => speakText(msg.content, msg.id)}
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] transition ${speakingId === msg.id
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] transition ${
+                        speakingId === msg.id
                           ? 'border-emerald-500/40 bg-emerald-500/20 text-emerald-400 font-semibold'
                           : 'border-border bg-secondary hover:text-foreground'
-                        }`}
+                      }`}
                       title="Listen with Text-to-Speech"
                     >
                       {speakingId === msg.id ? (
@@ -571,10 +619,11 @@ export function VoiceAssistant({
             type="button"
             onClick={toggleListening}
             title={isListening ? "Stop Listening" : "Press to Speak"}
-            className={`relative p-3 rounded-xl flex items-center justify-center transition shadow-md shrink-0 ${isListening
+            className={`relative p-3 rounded-xl flex items-center justify-center transition shadow-md shrink-0 ${
+              isListening
                 ? 'bg-rose-600 text-white animate-pulse'
                 : 'bg-emerald-600 text-white hover:bg-emerald-500 shadow-emerald-600/20'
-              }`}
+            }`}
           >
             {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
           </button>
@@ -589,8 +638,8 @@ export function VoiceAssistant({
               currentLang === 'kn'
                 ? 'ಮಾತನಾಡಿ 🎤 ಅಥವಾ ಪ್ರಶ್ನೆ ಟೈಪ್ ಮಾಡಿ...'
                 : currentLang === 'hi'
-                  ? 'बोलें 🎤 या प्रश्न टाइप करें...'
-                  : 'Speak 🎤 or ask anything (weather, ledger, GST, math)...'
+                ? 'बोलें 🎤 या प्रश्न टाइप करें...'
+                : 'Speak 🎤 or ask anything (weather, ledger, GST, math)...'
             }
             className="flex-1 bg-secondary border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500/40 transition"
           />

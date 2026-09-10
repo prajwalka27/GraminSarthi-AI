@@ -255,7 +255,6 @@ export async function handleAssistantQuery(
     const isTranslate = /(translate|अनुवाद|ಅನುವಾದಿಸಿ)/i.test(lower);
     if (isTranslate) {
         if (lower.includes("kannada") || lower.includes("कन्नड़") || lower.includes("ಕನ್ನಡ")) {
-            // Translate request to Kannada
             return {
                 success: true,
                 reply: "ನಮಸ್ಕಾರ, ಗ್ರಾಮಸಾರಥಿ ಕೃತಕ ಬುದ್ಧಿಮತ್ತೆ ಸಹಾಯಕ ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು? (Namaskara, how can GraminSarthi AI assist you?)",
@@ -271,6 +270,54 @@ export async function handleAssistantQuery(
                 language: 'hi',
             };
         }
+    }
+
+    // TOOL K: Customer Village Store Rates & Inventory Prices
+    const isStoreRates = /(rate|price|cost|price of|rate of|how much|bhav|daam|kimat|kitna|ಬೆಲೆ|ದರ|ಭಾವ|ಭಾವನೆ|भाव|कीमत|दाम|ಎಷ್ಟು).*(rice|milk|atta|flour|oil|ghee|paneer|dal|sugar|jaggery|chai|tea|seeds|chawal|doodh|tel|kiran|akki|haalu|tuppa|hit|bele|ಅಕ್ಕಿ|ಹಾಲು|ಹಾಲಿನ|ತುಪ್ಪ|ಎಣ್ಣೆ|ಬೆಲ್ಲ|ಚಹಾ|ಹಿಟ್ಟು|ಪನೀರ್|ದಾಲ್|चावल|दूध|दही|घी|तेल|गुड़|चाय|आटा|दाल|पनीर)|(rice|milk|atta|flour|oil|ghee|paneer|dal|sugar|jaggery|chai|tea|seeds|chawal|doodh|tel|kiran|akki|haalu|tuppa|hit|bele|ಅಕ್ಕಿ|ಹಾಲು|ಹಾಲಿನ|ತುಪ್ಪ|ಎಣ್ಣೆ|ಬೆಲ್ಲ|ಚಹಾ|ಹಿಟ್ಟು|ಪನೀರ್|ದಾಲ್|चावल|दूध|दही|घी|तेल|गुड़|चाय|आटा|दाल|पनीर).*(rate|price|cost|how much|bhav|daam|kimat|kitna|ಬೆಲೆ|ದರ|ಭಾವ|ಭಾವನೆ|भाव|कीमत|ದाम|ಎಷ್ಟು|ಖರೀದಿ)/i.test(lower);
+    if (isStoreRates) {
+        const ratesReplies = {
+            en: "Current Village Market Rates:\n• Sona Masoori Rice (Old Harvest): ₹56/kg (Sri Lakshmi Provisions)\n• Fresh Buffalo Milk: ₹34 / 500ml (₹68/L at Gopal Dairy Point)\n• Chakki Fresh Sharbati Atta: ₹42/kg\n• Desi Cow Ghee (Pure Bilona): ₹650/kg\n• Cold-Pressed Mustard Oil: ₹135/L\n• Fresh Milk Paneer: ₹110 / 250g\n• Organic Village Jaggery (Gur): ₹60/kg\n• Kadak Masala Chai Patti: ₹90 / 250g\nYou can order these items directly from the Customer Portal with doorstep village delivery!",
+            hi: "गांव के बाजार में आज के ताजा भाव:\n• सोना मसूरी चावल: ₹56 प्रति किलो (श्री लक्ष्मी प्रोविजन्स)\n• ताजा भैंस का दूध: ₹34 प्रति 500ml (₹68/लीटर, गोपाल डेयरी)\n• चक्की ताजा शरबती आटा: ₹42 प्रति किलो\n• शुद्ध देसी गाय का घी: ₹650 प्रति किलो\n• कच्ची घानी सरसों का तेल: ₹135 प्रति लीटर\n• ताजा पनीर: ₹110 प्रति 250 ग्राम\n• जैविक देशी गुड़: ₹60 प्रति किलो\n• कड़क मसाला चाय पत्ती: ₹90 प्रति 250 ग्राम\nआप ग्राहक पोर्टल से सीधे ऑर्डर कर सकते हैं!",
+            kn: "ನಮ್ಮ ಗ್ರಾಮದ ಮಾರುಕಟ್ಟೆಯ ಇಂದಿನ ತಾಜಾ ದರಗಳು:\n• ಸೋನಾ ಮಸೂರಿ ಅಕ್ಕಿ: ₹56 / ಕೆಜಿ (ಶ್ರೀ ಲಕ್ಷ್ಮಿ ಪ್ರಾವಿಷನ್ಸ್)\n• ತಾಜಾ ಎಮ್ಮೆ ಹಾಲು: ₹34 / 500ml (₹68/ಲೀಟರ್, ಗೋಪಾಲ್ ಡೈರಿ)\n• ಚಕ್ಕಿ ತಾಜಾ ಗೋಧಿ ಹಿಟ್ಟು: ₹42 / ಕೆಜಿ\n• ಶುದ್ಧ ಹಸುವಿನ ತುಪ್ಪ: ₹650 / ಕೆಜಿ\n• ಗಾಣದ ಸಾಸಿವೆ ಎಣ್ಣೆ: ₹135 / ಲೀಟರ್\n• ತಾಜಾ ಪನೀರ್: ₹110 / 250 ಗ್ರಾಂ\n• ಸಾವಯವ ಬೆಲ್ಲ: ₹60 / ಕೆಜಿ\n• ಕಡಕ್ ಮಸಾಲಾ ಚಹಾ ಪುಡಿ: ₹90 / 250 ಗ್ರಾಂ\nಗ್ರಾಹಕ ಪೋರ್ಟಲ್ ಮೂಲಕ ನೀವು ಮನೆ ಬಾಗಿಲಿಗೆ ನೇರವಾಗಿ ಆರ್ಡರ್ ಮಾಡಬಹುದು!"
+        };
+        return {
+            success: true,
+            reply: ratesReplies[language],
+            toolUsed: "village_store_inventory",
+            language,
+        };
+    }
+
+    // TOOL L: Customer Khata Balance Check
+    const isCustomerKhataCheck = /(check.*(?:my|pending)?.*khata|my.*(?:khata|due|balance)|pending.*khata|credit.*balance|baki.*(?:khata|paisa)|kitna.*baki|khata.*kitna|khate.*baki|ಖಾತೆ.*ಬಾಕಿ|ನನ್ನ.*ಖಾತೆ|ಬಾಕಿ.*ಖಾತೆ)/i.test(lower);
+    if (isCustomerKhataCheck) {
+        const khataReplies = {
+            en: "To check your Khata credit balance:\n1. Click the 'Khata Credit' button on the Customer Portal navigation.\n2. You can view your real-time total due, individual shop ledgers, and credit limit.\n3. Tap 'Pay via UPI' to scan and settle payments instantly with zero interest. Regular repayments help you build a formal rural credit score!",
+            hi: "अपना खाता बकाया देखने के लिए:\n1. ग्राहक पोर्टल पर 'खाता क्रेडिट' (Khata) बटन पर क्लिक करें।\n2. वहाँ आपकी कुल बकाया राशि, दुकानदारों का हिसाब और क्रेडिट सीमा दिखाई देगी।\n3. 'Pay via UPI' दबाकर आप तुरंत शून्य ब्याज पर भुगतान कर सकते हैं। समय पर भुगतान से आपका ग्रामीण क्रेडिट स्कोर मजबूत होता है!",
+            kn: "ನಿಮ್ಮ ಖಾತೆ ಬಾಕಿ ವಿವರ ಪರಿಶೀಲಿಸಲು:\n1. ಗ್ರಾಹಕ ಪೋರ್ಟಲ್‌ನಲ್ಲಿ 'ಖಾತೆ ಕ್ರೆಡಿಟ್' (Khata) ಬಟನ್ ಒತ್ತಿ.\n2. ನಿಮ್ಮ ಒಟ್ಟು ಬಾಕಿ ಮೊತ್ತ, ಅಂಗಡಿಯವರ ವಿವರ ಹಾಗೂ ಕ್ರೆಡಿಟ್ ಮಿತಿ ಲೈವ್ ಆಗಿ ಕಾಣಿಸುತ್ತದೆ.\n3. 'Pay via UPI' ಮೂಲಕ ಯಾವುದೇ ಬಡ್ಡಿಯಿಲ್ಲದೆ ತಕ್ಷಣವೇ ಬಾಕಿ ತೀರಿಸಬಹುದು. ಸಮಯಕ್ಕೆ ಸರಿಯಾಗಿ ಪಾವತಿಸುವುದರಿಂದ ಮುದ್ರಾ ಸಾಲಕ್ಕೆ ಉತ್ತಮ ಕ್ರೆಡಿಟ್ ಸ್ಕೋರ್ ಸಿಗುತ್ತದೆ!"
+        };
+        return {
+            success: true,
+            reply: khataReplies[language],
+            toolUsed: "khata_credit_advisory",
+            language,
+        };
+    }
+
+    // TOOL M: Store Opening Hours & Delivery
+    const isStoreHours = /(store.*(?:open|hour|time)|shop.*(?:open|hour|time)|opening.*hour|closing.*time|timing|samay|दुकान.*समय|खुलने.*समय|ಅಂಗಡಿ.*ಸಮಯ|ತೆರೆಯುವ.*ಸಮಯ)/i.test(lower);
+    if (isStoreHours) {
+        const hoursReplies = {
+            en: "Village partner stores operate daily from 6:30 AM to 9:30 PM. Fresh morning milk delivery starts at 6:00 AM from Gopal Dairy Point. Orders placed via GraminSarthi are fulfilled on the same day within 45 minutes!",
+            hi: "गांव की पार्टनर दुकानें प्रतिदिन सुबह 6:30 बजे से रात 9:30 बजे तक खुली रहती हैं। गोपाल डेयरी से सुबह 6:00 बजे ताजा दूध उपलब्ध होता है। ग्रामीण सारथी पर किए गए ऑर्डर 45 मिनट के भीतर घर पहुंचाए जाते हैं!",
+            kn: "ಗ್ರಾಮದ ಸಹಭಾಗಿ ಅಂಗಡಿಗಳು ಪ್ರತಿದಿನ ಬೆಳಗ್ಗೆ 6:30 ರಿಂದ ರಾತ್ರಿ 9:30 ರವರೆಗೆ ತೆರೆದಿರುತ್ತವೆ. ಗೋಪಾಲ್ ಡೈರಿಯಿಂದ ಬೆಳಗ್ಗೆ 6:00 ಗಂಟೆಗೆ ತಾಜಾ ಹಾಲು ಲಭ್ಯವಿರುತ್ತದೆ. ಗ್ರಾಮೀಣ ಸಾರಥಿ ಮೂಲಕ ನೀಡಿದ ಆರ್ಡರ್‌ಗಳನ್ನು 45 ನಿಮಿಷಗಳಲ್ಲಿ ತಲುಪಿಸಲಾಗುತ್ತದೆ!"
+        };
+        return {
+            success: true,
+            reply: hoursReplies[language],
+            toolUsed: "village_store_inventory",
+            language,
+        };
     }
 
     // 4. If GEMINI_API_KEY is configured, call Gemini with grounded context

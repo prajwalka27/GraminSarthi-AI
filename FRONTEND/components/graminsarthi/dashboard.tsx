@@ -13,12 +13,13 @@ import { ActionSteps } from './action-steps'
 import { FinanceCalculator } from './finance-calculator'
 import { ProblemsCard } from './problems-card'
 import { VoiceAssistant } from './voice-assistant'
+import { AddRealData } from './add-real-data'
 import type { Lang, TranslationKey } from '@/lib/graminsarthi/i18n'
 import { computeKpis, formatINR, getShopProfile, getAllShopProfiles, getRemediation, TRADE_CATEGORIES, type ShopProfileKey } from '@/lib/graminsarthi/data'
 import { useGraminsarthiStore } from '@/hooks/use-graminsarthi-store'
 import { Field, Select, TextInput } from './primitives'
 
-type DashboardTab = 'LEDGER' | 'FEASIBILITY' | 'FINANCE_CALCULATOR' | 'PROBLEMS' | 'VOICE_ASSISTANT'
+type DashboardTab = 'LEDGER' | 'ADD_DATA' | 'FEASIBILITY' | 'FINANCE_CALCULATOR' | 'PROBLEMS' | 'VOICE_ASSISTANT'
 
 export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLogout, onSwitchToCustomer, onSwitchToHost }: {
   lang: Lang
@@ -143,6 +144,14 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
               Live Database Connected
             </div>
 
+            <button
+              onClick={() => setActiveTab('ADD_DATA')}
+              className="inline-flex items-center gap-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/15 px-3 py-1.5 text-xs font-semibold text-emerald-300 hover:bg-emerald-500/25 transition active:scale-95 shadow-sm"
+              title="Add live transaction, inventory item, khata entry, or operational issue"
+            >
+              <span>➕ {lang === 'kn' ? 'ಡೇಟಾ ಸೇರಿಸಿ' : lang === 'hi' ? 'ಡेटा जोड़ें' : 'Add Real Data'}</span>
+            </button>
+
             <div className="relative inline-flex items-center">
               <Store
                 className="pointer-events-none absolute left-3 h-4 w-4 text-emerald-300"
@@ -204,6 +213,15 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
                 }`}
             >
               {t('tabLedger')}
+            </button>
+            <button
+              onClick={() => setActiveTab('ADD_DATA')}
+              className={`min-h-12 border-b-2 px-1 text-sm font-semibold transition flex items-center gap-1.5 ${activeTab === 'ADD_DATA'
+                ? 'border-emerald-500 text-emerald-500'
+                : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+            >
+              ➕ {lang === 'kn' ? 'ಡೇಟಾ ಸೇರಿಸಿ' : lang === 'hi' ? 'डेटा जोड़ें' : 'Add Real Data'}
             </button>
             <button
               onClick={() => setActiveTab('FEASIBILITY')}
@@ -285,6 +303,19 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
                 removeInventoryItem={removeInventoryItem}
               />
             </div>
+          </div>
+        )}
+
+        {activeTab === 'ADD_DATA' && (
+          <div className="mx-auto max-w-5xl">
+            <AddRealData
+              lang={lang}
+              merchantId={merchantId}
+              businessId={businessId || undefined}
+              onDataAdded={() => {
+                setPulse((p) => p + 1)
+              }}
+            />
           </div>
         )}
 

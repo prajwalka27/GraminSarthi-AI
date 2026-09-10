@@ -28,10 +28,12 @@ import {
   Clock,
   Truck,
   ShieldCheck,
-  PackageCheck
+  PackageCheck,
+  Mic,
 } from 'lucide-react'
 import { BrandMark } from './primitives'
 import { LanguageSelect } from './language-select'
+import { VoiceAssistant } from './voice-assistant'
 import type { Lang, TranslationKey } from '@/lib/graminsarthi/i18n'
 import {
   useVillageStore,
@@ -81,6 +83,7 @@ export function CustomerPortal({
   const [showKhata, setShowKhata] = useState(false)
   const [showOrders, setShowOrders] = useState(false)
   const [showProfileModal, setShowProfileModal] = useState(false)
+  const [showVoiceModal, setShowVoiceModal] = useState(false)
   const [paymentModalDue, setPaymentModalDue] = useState<KhataEntry | null>(null)
   const [paymentSuccess, setPaymentSuccess] = useState(false)
   const [orderSuccessNotice, setOrderSuccessNotice] = useState('')
@@ -264,6 +267,16 @@ export function CustomerPortal({
               <User className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">{currentCustomer ? currentCustomer.name : 'Create Profile'}</span>
               <span className="text-[10px] text-emerald-400/80">({currentCustomer?.ward || 'Register'})</span>
+            </button>
+
+            {/* Customer Voice Assistant Button */}
+            <button
+              onClick={() => setShowVoiceModal(true)}
+              className="relative inline-flex items-center gap-1.5 rounded-xl border border-teal-500/40 bg-teal-500/15 px-3 py-2 text-xs font-semibold text-teal-200 transition hover:bg-teal-500/25 active:scale-95 shadow-sm"
+              title="Ask Village Store Voice AI in Kannada, Hindi, English"
+            >
+              <Mic className="h-3.5 w-3.5 text-teal-300 animate-pulse" />
+              <span className="hidden sm:inline">{lang === 'kn' ? 'ಧ್ವನಿ ಸಹಾಯಕ' : lang === 'hi' ? 'बोलकर पूछें' : 'Voice AI'}</span>
             </button>
 
             {/* My Orders Button */}
@@ -968,6 +981,58 @@ export function CustomerPortal({
             >
               {paymentSuccess ? '✓ Payment Settled in Real-Time!' : 'Simulate Successful UPI Payment'}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Floating Voice Assistant Trigger for Village Customers */}
+      <button
+        onClick={() => setShowVoiceModal(true)}
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2.5 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-500 px-4 py-3 text-sm font-bold text-white shadow-2xl shadow-emerald-900/50 hover:scale-105 transition-all active:scale-95 border border-emerald-300/30"
+        title="Ask Village Store Voice AI"
+      >
+        <span className="flex h-3 w-3 relative">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+        </span>
+        <Mic className="h-5 w-5" />
+        <span>{lang === 'kn' ? 'ಗ್ರಾಮೀಣ ಸಹಾಯಕ (ಮಾತನಾಡಿ)' : lang === 'hi' ? 'बोलकर पूछें (AI)' : 'Ask Village AI'}</span>
+      </button>
+
+      {/* Customer Voice Assistant Modal */}
+      {showVoiceModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-3 sm:p-4 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl border border-border bg-card p-4 sm:p-6 shadow-2xl">
+            <div className="flex justify-between items-center mb-4 pb-3 border-b border-border/50">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-3 w-3 relative">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+                <div>
+                  <h3 className="font-bold text-sm sm:text-base text-foreground">
+                    {lang === 'kn' ? 'ಗ್ರಾಮೀಣ ಸಾರಥಿ ಧ್ವನಿ ಸಹಾಯಕ (ಗ್ರಾಹಕ ಮೋಡ್)' : lang === 'hi' ? 'ग्रामीण सारथी वॉयस असिस्टेंट (ग्राहक सहायता)' : 'GraminSarthi Customer Voice Assistant'}
+                  </h3>
+                  <p className="text-[11px] text-muted-foreground">
+                    {lang === 'kn' ? 'ದರಗಳು, ಹವಾಮಾನ, ಖಾತೆ ಮಾಹಿತಿ ಅಥವಾ ಲೆಕ್ಕಾಚಾರಗಳನ್ನು ಧ್ವನಿಯ ಮೂಲಕ ಕೇಳಿ' : lang === 'hi' ? 'दुकान के भाव, मौसम, खाता या हिसाब बोलकर पूछें' : 'Ask store rates, village weather, khata balance, or calculations by voice'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowVoiceModal(false)}
+                className="rounded-full p-2 text-muted-foreground hover:bg-muted hover:text-foreground transition"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <VoiceAssistant
+              lang={lang}
+              mode="customer"
+              merchantId={currentCustomer?.id || 'village_customer'}
+              businessId={shops[0]?.id || 'village_market'}
+              isModal={true}
+              onClose={() => setShowVoiceModal(false)}
+            />
           </div>
         </div>
       )}
