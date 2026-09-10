@@ -231,8 +231,8 @@ export async function handleLogin(body: any): Promise<AuthResponse> {
     let businessId: string | undefined;
     try {
         const mRes = await query(
-            `SELECT id FROM merchants WHERE user_id = $1 OR phone = $2 LIMIT 1;`,
-            [user.id, user.phone]
+            `SELECT id FROM merchants WHERE (user_id::text = $1::text) OR phone = $2 OR mobile = $2 LIMIT 1;`,
+            [String(user.id), user.phone]
         );
         if (mRes.rows.length > 0) {
             merchantId = mRes.rows[0].id;
@@ -241,8 +241,8 @@ export async function handleLogin(body: any): Promise<AuthResponse> {
                 businessId = bList[0].id;
             }
         }
-    } catch {
-        // Continue if merchant link lookup fails
+    } catch (err) {
+        console.warn("[Auth] Merchant lookup notice:", err instanceof Error ? err.message : err);
     }
 
     // 4. Create HMAC session token and cookie header
@@ -334,8 +334,8 @@ export async function handleGetSession(
     try {
         if (!merchantId) {
             const mRes = await query(
-                `SELECT id FROM merchants WHERE user_id = $1 OR phone = $2 LIMIT 1;`,
-                [user.id, user.phone]
+                `SELECT id FROM merchants WHERE (user_id::text = $1::text) OR phone = $2 OR mobile = $2 LIMIT 1;`,
+                [String(user.id), user.phone]
             );
             if (mRes.rows.length > 0) merchantId = mRes.rows[0].id;
         }
@@ -343,8 +343,8 @@ export async function handleGetSession(
             const bList = await getBusinessesByMerchant(merchantId);
             if (bList.length > 0) businessId = bList[0].id;
         }
-    } catch {
-        // ignore
+    } catch (err) {
+        console.warn("[Auth] Session merchant lookup notice:", err instanceof Error ? err.message : err);
     }
 
     return {

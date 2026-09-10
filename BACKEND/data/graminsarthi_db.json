@@ -1,6 +1,36 @@
 {
   "users": [
     {
+      "id": "245ee759-71e4-4344-b704-6df9fe8269e1",
+      "name": "Merchant Test",
+      "email": "test1788981582623@example.com",
+      "phone": "+919876543299",
+      "password_hash": "$2b$10$Zi0j5s35mWck1RjiH8GiHefQhisO6C8stxqLxjLIJ7eCt88z.TodS",
+      "role": "user",
+      "created_at": "2026-09-09T19:19:42.887Z",
+      "updated_at": "2026-09-09T19:19:42.887Z"
+    },
+    {
+      "id": "45b4fa0a-07d2-4b3d-807e-ec245faf5920",
+      "name": "Ramesh Patel",
+      "email": "assistant_test_1788981483747@kirana.in",
+      "phone": "+919876534993",
+      "password_hash": "$2b$10$nt4hIpSvoEEugUvYfMeQReHRC2FQORjRF6GkN/oxsafiHFyCCAb.q",
+      "role": "user",
+      "created_at": "2026-09-09T19:18:03.998Z",
+      "updated_at": "2026-09-09T19:18:03.998Z"
+    },
+    {
+      "id": "75246289-3773-4120-990b-b1d95da684ad",
+      "name": "Mounish B",
+      "email": "mounish1825@gmail.com",
+      "phone": "+919742325804",
+      "password_hash": "$2b$10$a.2Ujfw78ci5i9/udPwySuw/Aj0av95UwQRAAiLCyQ71gloo2g8iK",
+      "role": "user",
+      "created_at": "2026-09-09T19:04:14.617Z",
+      "updated_at": "2026-09-09T19:04:14.617Z"
+    },
+    {
       "id": "77fd757e-ea52-4989-892e-9eff479cc1d6",
       "name": "Sita Devi",
       "email": "sita.devi.1788980330740@graminsarthi.in",
@@ -52,6 +82,51 @@
     }
   ],
   "merchants": [
+    {
+      "id": "c768be29-3c6e-4fbd-bddf-c9fec274f0a5",
+      "user_id": "245ee759-71e4-4344-b704-6df9fe8269e1",
+      "business_name": "Merchant Test's Store",
+      "owner_name": "Merchant Test",
+      "name": "Merchant Test",
+      "phone": "+919876543299",
+      "mobile": "+919876543299",
+      "email": "test1788981582623@example.com",
+      "address": null,
+      "category": "General Store",
+      "language": "en",
+      "created_at": "2026-09-09T19:19:42.889Z",
+      "updated_at": "2026-09-09T19:19:42.889Z"
+    },
+    {
+      "id": "24b0cb9e-88ad-45cc-b4a0-58c0dc2c713f",
+      "user_id": "45b4fa0a-07d2-4b3d-807e-ec245faf5920",
+      "business_name": "Ramesh Patel's Store",
+      "owner_name": "Ramesh Patel",
+      "name": "Ramesh Patel",
+      "phone": "+919876534993",
+      "mobile": "+919876534993",
+      "email": "assistant_test_1788981483747@kirana.in",
+      "address": null,
+      "category": "General Store",
+      "language": "en",
+      "created_at": "2026-09-09T19:18:04.000Z",
+      "updated_at": "2026-09-09T19:18:04.000Z"
+    },
+    {
+      "id": "7798e02d-5072-4b2d-9613-425c2a1079d0",
+      "user_id": "75246289-3773-4120-990b-b1d95da684ad",
+      "business_name": "Mounish B's Store",
+      "owner_name": "Mounish B",
+      "name": "Mounish B",
+      "phone": "+919742325804",
+      "mobile": "+919742325804",
+      "email": "mounish1825@gmail.com",
+      "address": null,
+      "category": "General Store",
+      "language": "en",
+      "created_at": "2026-09-09T19:04:14.623Z",
+      "updated_at": "2026-09-09T19:04:14.623Z"
+    },
     {
       "id": "df795fa9-3b49-40ba-96e6-2994916c4aee",
       "user_id": "77fd757e-ea52-4989-892e-9eff479cc1d6",
@@ -304,6 +379,54 @@
     }
   ],
   "businesses": [
+    {
+      "id": "4cab9b7e-c336-424f-ba2a-6425223c5f27",
+      "merchant_id": "c768be29-3c6e-4fbd-bddf-c9fec274f0a5",
+      "business_name": "Merchant Test's Store",
+      "category": "General Store",
+      "business_category": "General Store",
+      "village": null,
+      "district": null,
+      "state": null,
+      "location": null,
+      "description": null,
+      "address": null,
+      "phone": null,
+      "created_at": "2026-09-09T19:19:42.890Z",
+      "updated_at": "2026-09-09T19:19:42.890Z"
+    },
+    {
+      "id": "0f2d6ecb-5f09-4f81-a940-10cc1c3419f8",
+      "merchant_id": "24b0cb9e-88ad-45cc-b4a0-58c0dc2c713f",
+      "business_name": "Ramesh Patel's Store",
+      "category": "General Store",
+      "business_category": "General Store",
+      "village": null,
+      "district": null,
+      "state": null,
+      "location": null,
+      "description": null,
+      "address": null,
+      "phone": null,
+      "created_at": "2026-09-09T19:18:04.002Z",
+      "updated_at": "2026-09-09T19:18:04.002Z"
+    },
+    {
+      "id": "4ee41a76-cf1b-42a9-a4f2-0f6a0d5fb753",
+      "merchant_id": "7798e02d-5072-4b2d-9613-425c2a1079d0",
+      "business_name": "Mounish B's Store",
+      "category": "General Store",
+      "business_category": "General Store",
+      "village": null,
+      "district": null,
+      "state": null,
+      "location": null,
+      "description": null,
+      "address": null,
+      "phone": null,
+      "created_at": "2026-09-09T19:04:14.628Z",
+      "updated_at": "2026-09-09T19:04:14.628Z"
+    },
     {
       "id": "2e445061-4a28-4f32-a378-4f582b9f6297",
       "merchant_id": "df795fa9-3b49-40ba-96e6-2994916c4aee",
@@ -584,6 +707,42 @@
     }
   ],
   "ledger_entries": [
+    {
+      "id": "bae047c4-6dd4-43d4-bfdc-a43bfae921ca",
+      "merchant_id": "c768be29-3c6e-4fbd-bddf-c9fec274f0a5",
+      "business_id": "4cab9b7e-c336-424f-ba2a-6425223c5f27",
+      "type": "EXPENSE",
+      "entry_type": "EXPENSE",
+      "amount": 2200,
+      "description": "Monthly electricity bill",
+      "entry_date": "2026-09-09",
+      "created_at": "2026-09-09T19:28:13.492Z",
+      "updated_at": "2026-09-09T19:28:13.492Z"
+    },
+    {
+      "id": "eff6aea4-6616-4067-9e06-5aaacc55c5ff",
+      "merchant_id": "c768be29-3c6e-4fbd-bddf-c9fec274f0a5",
+      "business_id": "4cab9b7e-c336-424f-ba2a-6425223c5f27",
+      "type": "EXPENSE",
+      "entry_type": "EXPENSE",
+      "amount": 18500,
+      "description": "Bulk mustard oil and wheat stock",
+      "entry_date": "2026-09-09",
+      "created_at": "2026-09-09T19:28:13.470Z",
+      "updated_at": "2026-09-09T19:28:13.470Z"
+    },
+    {
+      "id": "d6a43509-6f81-4b5b-b768-8bd2ca828673",
+      "merchant_id": "c768be29-3c6e-4fbd-bddf-c9fec274f0a5",
+      "business_id": "4cab9b7e-c336-424f-ba2a-6425223c5f27",
+      "type": "SALE",
+      "entry_type": "SALE",
+      "amount": 32000,
+      "description": "Grocery sales",
+      "entry_date": "2026-09-09",
+      "created_at": "2026-09-09T19:28:13.454Z",
+      "updated_at": "2026-09-09T19:28:13.454Z"
+    },
     {
       "id": "7fc3c8c0-9fd7-4936-b50f-8453b0f67a83",
       "merchant_id": "f907234a-085e-45a2-812c-4bf23ad7c701",

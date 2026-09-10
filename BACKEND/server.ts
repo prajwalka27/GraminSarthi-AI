@@ -8,6 +8,7 @@ import { calculateFinancials, createLedgerEntry, deleteLedgerEntry, getLedgerEnt
 import { getBusinessDashboard, getDashboardSummary } from "./routes/dashboard.js";
 import { getDailyReport, getMonthlyReport, getSummaryReport } from "./routes/reports.js";
 import { analyzeBusinessAI } from "./routes/ai.js";
+import { handleAssistantQuery } from "./routes/assistant.js";
 import { createProblem, deleteProblem, getProblemById, getProblems, updateProblem } from "./routes/problems.js";
 import { handleRegister, handleLogin, handleGetSession, handleLogout } from "./routes/auth.js";
 import { AppError } from "./utils/validation.js";
@@ -79,6 +80,7 @@ const server = http.createServer(async (req, res) => {
                     "POST /api/ledger/calculate",
                     "GET /api/dashboard",
                     "POST /api/ai/analyze",
+                    "POST /api/ai/assistant",
                     "GET /api/problems",
                     "POST /api/problems",
                     "GET /api/problems/:id",
@@ -498,6 +500,16 @@ const server = http.createServer(async (req, res) => {
                     sendSuccess(res, analysis);
                     return;
                 }
+            }
+
+            // POST /api/ai/assistant (Voice & Text conversational assistant)
+            if (action === "assistant") {
+                if (req.method !== "POST") {
+                    return sendError(res, "Method Not Allowed. Use POST", 405);
+                }
+                const input = await readJSON(req);
+                const result = await handleAssistantQuery(input, req.headers.cookie, req.headers.authorization);
+                return sendJson(res, 200, result);
             }
         }
 

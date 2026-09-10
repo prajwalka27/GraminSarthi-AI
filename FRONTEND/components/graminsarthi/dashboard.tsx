@@ -12,12 +12,13 @@ import { SchemeMatcher } from './scheme-matcher'
 import { ActionSteps } from './action-steps'
 import { FinanceCalculator } from './finance-calculator'
 import { ProblemsCard } from './problems-card'
+import { VoiceAssistant } from './voice-assistant'
 import type { Lang, TranslationKey } from '@/lib/graminsarthi/i18n'
 import { computeKpis, formatINR, getShopProfile, getAllShopProfiles, getRemediation, TRADE_CATEGORIES, type ShopProfileKey } from '@/lib/graminsarthi/data'
 import { useGraminsarthiStore } from '@/hooks/use-graminsarthi-store'
 import { Field, Select, TextInput } from './primitives'
 
-type DashboardTab = 'LEDGER' | 'FEASIBILITY' | 'FINANCE_CALCULATOR' | 'PROBLEMS'
+type DashboardTab = 'LEDGER' | 'FEASIBILITY' | 'FINANCE_CALCULATOR' | 'PROBLEMS' | 'VOICE_ASSISTANT'
 
 export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLogout, onSwitchToCustomer, onSwitchToHost }: {
   lang: Lang
@@ -58,6 +59,7 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
 
   const [pulse, setPulse] = useState(0)
   const [activeTab, setActiveTab] = useState<DashboardTab>('LEDGER')
+  const [showFloatingAssistant, setShowFloatingAssistant] = useState(false)
   const [showAddBiz, setShowAddBiz] = useState(false)
   const [bizName, setBizName] = useState('')
   const [bizCategory, setBizCategory] = useState(TRADE_CATEGORIES[0])
@@ -230,6 +232,15 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
             >
               ⚠️ {lang === 'hi' ? 'समस्याएं और मुद्दे' : 'Issues & Problems'}
             </button>
+            <button
+              onClick={() => setActiveTab('VOICE_ASSISTANT')}
+              className={`min-h-12 border-b-2 px-1 text-sm font-semibold transition flex items-center gap-1.5 ${activeTab === 'VOICE_ASSISTANT'
+                ? 'border-emerald-500 text-emerald-500'
+                : 'border-transparent text-muted-foreground hover:text-foreground'
+                }`}
+            >
+              🎙️ {lang === 'kn' ? 'ಧ್ವನಿ ಸಹಾಯಕ' : lang === 'hi' ? 'वॉयस असिस्टेंट' : 'Voice Assistant'}
+            </button>
           </div>
         </div>
       </header>
@@ -300,6 +311,12 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
             <ProblemsCard lang={lang} merchantId={merchantId} businessId={businessId || undefined} />
           </div>
         )}
+
+        {activeTab === 'VOICE_ASSISTANT' && (
+          <div className="mx-auto max-w-4xl">
+            <VoiceAssistant lang={lang} merchantId={merchantId} businessId={businessId || undefined} />
+          </div>
+        )}
       </main>
 
       {showAddBiz && (
@@ -344,6 +361,37 @@ export function Dashboard({ lang, onLangChange, t, initialShop, merchantId, onLo
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* FLOATING VOICE ASSISTANT BUTTON */}
+      <div className="fixed bottom-6 right-6 z-40">
+        <button
+          type="button"
+          onClick={() => setShowFloatingAssistant(true)}
+          className="flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white font-semibold text-sm shadow-2xl shadow-emerald-500/50 hover:from-emerald-500 hover:to-teal-500 hover:scale-105 active:scale-95 transition border border-emerald-400/30"
+          title="Ask GraminSarthi Voice AI"
+        >
+          <span className="relative flex h-3 w-3">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+          </span>
+          <span>🎙️ {lang === 'kn' ? 'ಧ್ವನಿ ಸಹಾಯಕ' : lang === 'hi' ? 'बोलकर पूछें' : 'Ask AI Voice'}</span>
+        </button>
+      </div>
+
+      {/* FLOATING VOICE ASSISTANT MODAL / DRAWER */}
+      {showFloatingAssistant && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-3 sm:p-6 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="w-full max-w-3xl h-[88vh] max-h-[750px] flex flex-col">
+            <VoiceAssistant
+              lang={lang}
+              merchantId={merchantId}
+              businessId={businessId || undefined}
+              isModal={true}
+              onClose={() => setShowFloatingAssistant(false)}
+            />
           </div>
         </div>
       )}
